@@ -88,11 +88,12 @@ def playgame(home, away):
             poss_away = 0
             poss_home = 1
             gametime += 24 * random.random() / aspeed
-        if gametime > max_gametime: 
+        if gametime > max_gametime:
+            gametime = max_gametime
             if hscore != ascore:
-                gametime = max_gametime
                 playing = False
             else:
+                print("OVERTIME!\n")
                 poss_home, poss_away = tip_off(home, away)
                 max_gametime += 300
         print("Gametime: ", int(gametime), " | ", home.name, ":", hscore, " ", away.name, ":", ascore,"\n")
