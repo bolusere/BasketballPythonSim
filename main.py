@@ -69,41 +69,51 @@ class team:
 def playgame(home, away):
     print(away.name, " @ ", home.name)
     #set possession
-    poss = random.random()
-    if poss >= 0.5:
-        poss_home = 1
-        poss_away = 0
-        print(home.name, "wins the tip-off!")
-    else:
-        poss_away = 1
-        poss_home = 0
-        print(away.name, "wins the tip-off!")
+    poss_home, poss_away = tip_off(home, away)
     gametime = 0
+    max_gametime = 2400
     hscore = 0
     ascore = 0
     hspeed = (home.pointg.speed + home.shootg.speed + home.smallf.speed) / 300
     aspeed = (away.pointg.speed + away.shootg.speed + away.smallf.speed) / 300
-    while gametime < 2400: #40min games
-        if poss_home == 1:
+    playing = True
+    while playing: #40min games
+        if poss_home:
             hscore += run_play(home, away)
             poss_away = 1
             poss_home = 0
             gametime += 24 * random.random() / hspeed
-            if gametime > 2400: gametime = 2400
-            print("Gametime: ", int(2400-gametime), " | ", home.name, ":", hscore, " ", away.name, ":", ascore,"\n")
-        elif poss_away == 1:
+        elif poss_away:
             ascore += run_play(away, home)
             poss_away = 0
             poss_home = 1
             gametime += 24 * random.random() / aspeed
-            if gametime > 2400: gametime = 2400
-            print("Gametime: ", int(2400-gametime), " | ", home.name, ":", hscore, " ", away.name, ":", ascore,"\n")
+        if gametime > max_gametime: 
+            if hscore != ascore:
+                gametime = max_gametime
+                playing = False
+            else:
+                poss_home, poss_away = tip_off(home, away)
+                max_gametime += 300
+        print("Gametime: ", int(gametime), " | ", home.name, ":", hscore, " ", away.name, ":", ascore,"\n")
     #boxscore
     print("HOME ", home.name, ": ", hscore)
     home.print_box()
     print("\n")
     print("AWAY ", away.name, ": ", ascore)
     away.print_box()
+
+def tip_off(home, away):
+    poss = random.random()
+    if poss > 0.5:
+        poss_home = True
+        poss_away = False
+        print(home.name, "wins the tip-off!")
+    else:
+        poss_away = True
+        poss_home = False
+        print(away.name, "wins the tip-off!")
+    return poss_home, poss_away
 
 def run_play(offense, defense): #take it possession at time yo
     print(offense.name, "have the ball.")
@@ -253,32 +263,23 @@ def take_shot(shooter, defender): #return points of shot, 0 if miss
             shooter.stats_fga += 1
             return 0
 
-# ------------------|  NAME  |HGT|WTLB|SPD|AGE|INS|MID|OUT|PSS|HND|STL|BLK|IND|OTD|REB| 
-StanPoint = bbplayer("Pointy", 72, 150, 90, 25, 75, 75, 75, 90, 90, 80, 30, 30, 80, 20)
-StanShoot = bbplayer("Shooty", 76, 180, 80, 25, 75, 85, 95, 75, 75, 50, 50, 50, 60, 40)
-StanSmall = bbplayer("Smally", 80, 200, 80, 25, 80, 85, 80, 70, 80, 75, 70, 75, 80, 75)
-StanPower = bbplayer("Powery", 82, 220, 60, 25, 80, 75, 30, 60, 75, 60, 90, 85, 70, 85)
-StanCenter= bbplayer("iBeast", 84, 250, 40, 25, 99, 50, 20, 20, 75, 60, 99, 99, 50, 99)
+if __name__ == "__main__":
 
-# ------------------|  NAME  |HGT|WTLB|SPD|AGE|INS|MID|OUT|PSS|HND|STL|BLK|IND|OTD|REB|
-StanPoin2 = bbplayer("iJesus", 72, 150, 90, 25, 99, 99, 99, 99, 90, 80, 30, 30, 80, 20)
-StanShoo2 = bbplayer("3Shoot", 76, 180, 80, 25, 25, 25, 99, 50, 75, 50, 50, 40, 40, 40)
-StanSmal2 = bbplayer("Onlydf", 80, 200, 40, 25, 25, 25, 25, 50, 25, 99, 99, 99, 99, 99)
-StanPowe2 = bbplayer("Power2", 82, 220, 60, 25, 80, 75, 30, 60, 75, 60, 90, 85, 70, 85)
-StanCente2= bbplayer("Cente2", 84, 250, 40, 25, 90, 50, 20, 60, 75, 60, 75, 75, 50, 90)
+    # ------------------|  NAME  |HGT|WTLB|SPD|AGE|INS|MID|OUT|PSS|HND|STL|BLK|IND|OTD|REB| 
+    StanPoint = bbplayer("Pointy", 72, 150, 90, 25, 75, 75, 75, 90, 90, 80, 30, 30, 80, 20)
+    StanShoot = bbplayer("Shooty", 76, 180, 80, 25, 75, 85, 95, 75, 75, 50, 50, 50, 60, 40)
+    StanSmall = bbplayer("Smally", 80, 200, 80, 25, 80, 85, 80, 70, 80, 75, 70, 75, 80, 75)
+    StanPower = bbplayer("Powery", 82, 220, 60, 25, 80, 75, 30, 60, 75, 60, 90, 85, 70, 85)
+    StanCenter= bbplayer("iBeast", 84, 250, 40, 25, 99, 50, 20, 20, 75, 60, 99, 99, 50, 99)
 
-
-team_A = team("Average Joes", StanPoint, StanShoot, StanSmall, StanPower, StanCenter)
-team_B = team("The Not Bads", StanPoin2, StanShoo2, StanSmal2, StanPowe2, StanCente2)
-playgame(team_A, team_B)
+    # ------------------|  NAME  |HGT|WTLB|SPD|AGE|INS|MID|OUT|PSS|HND|STL|BLK|IND|OTD|REB|
+    StanPoin2 = bbplayer("iJesus", 72, 150, 90, 25, 99, 99, 99, 99, 90, 80, 30, 30, 80, 20)
+    StanShoo2 = bbplayer("3Shoot", 76, 180, 80, 25, 25, 25, 99, 50, 75, 50, 50, 40, 40, 40)
+    StanSmal2 = bbplayer("Onlydf", 80, 200, 40, 25, 25, 25, 25, 50, 25, 99, 99, 99, 99, 99)
+    StanPowe2 = bbplayer("Power2", 82, 220, 60, 25, 80, 75, 30, 60, 75, 60, 90, 85, 70, 85)
+    StanCente2= bbplayer("Cente2", 84, 250, 40, 25, 90, 50, 20, 60, 75, 60, 75, 75, 50, 90)
 
 
-
-
-
-
-
-
-
-
-
+    team_A = team("Average Joes", StanPoint, StanShoot, StanSmall, StanPower, StanCenter)
+    team_B = team("The Not Bads", StanPoin2, StanShoo2, StanSmal2, StanPowe2, StanCente2)
+    playgame(team_A, team_B)
