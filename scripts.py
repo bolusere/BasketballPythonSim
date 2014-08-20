@@ -221,15 +221,16 @@ def generate_player(pref_pos, name="Generic"):
 
 def intelligent_pass(who_poss, offense, defense, matches):
     sorted_matches = sorted(matches)
-    tot_m = matches[0]+matches[1]+matches[2]+matches[3]+matches[4]
-    sel_target = random.randint(0, tot_m)
-    if sel_target<sorted_matches[4]: #30% chance to pass to greatest mismatch (add in bball IQ later to have higher chance?)
+    weighted = 5
+    tot_m = matches[0]**weighted + matches[1]**weighted + matches[2]**weighted + matches[3]**weighted + matches[4]**weighted
+    sel_target = random.randint(0, int(tot_m))
+    if sel_target < sorted_matches[4]**weighted: #fix this so its more proportional
         target = sorted_matches[4]
-    elif random.random()<0.4:
+    elif sel_target < (sorted_matches[4]**weighted + sorted_matches[3]**weighted):
         target = sorted_matches[3]
-    elif random.random()<0.4:
+    elif sel_target < (sorted_matches[4]**weighted + sorted_matches[3]**weighted + sorted_matches[2]**weighted):
         target = sorted_matches[2]
-    elif random.random()<0.4:
+    elif sel_target < (sorted_matches[4]**weighted + sorted_matches[3]**weighted + sorted_matches[2]**weighted + sorted_matches[1]**weighted):
         target = sorted_matches[1]
     else:
         target = sorted_matches[0]
@@ -415,13 +416,17 @@ def take_shot(shooter, defender, defense, assister, prplay): #return points of s
     mid_ten = 0
     int_ten = 0
     if shooter.out_s>50: out_ten = (shooter.out_s / defender.out_d) * shooter.out_s**1.2
-    if shooter.out_s + 20 < shooter.mid_s or shooter.out_s + 15 < shooter.int_s: out_ten -= 80 #see if one stat is sig worse than other two so he never takes that shot
+    if shooter.out_s + 20 < shooter.mid_s or shooter.out_s + 20 < shooter.int_s: out_ten -= 150 #see if one stat is sig worse than other two so he never takes that shot
+    out_ten += 3*(shooter.out_s - 75)
     
     if shooter.mid_s>50: mid_ten = (shooter.mid_s / (defender.out_d*0.5 + 0.5*defender.int_d)) * shooter.mid_s**1.2
-    if shooter.mid_s + 20 < shooter.out_s or shooter.mid_s + 15 < shooter.int_s: mid_ten -= 80
+    if shooter.mid_s + 20 < shooter.out_s or shooter.mid_s + 20 < shooter.int_s: mid_ten -= 150
+    mid_ten += 3*(shooter.mid_s - 75)
     
     if shooter.int_s>50: int_ten = (shooter.int_s / defender.int_d) * shooter.int_s**1.2
-    if shooter.int_s + 20 < shooter.out_s or shooter.int_s + 15 < shooter.mid_s: mid_ten -= 80
+    if shooter.int_s + 20 < shooter.out_s or shooter.int_s + 20 < shooter.mid_s: int_ten -= 150
+    int_ten += 3*(shooter.mid_s - 75)
+    
     if out_ten<0: out_ten=0
     if mid_ten<0: mid_ten=0
     if int_ten<0: int_ten=0
