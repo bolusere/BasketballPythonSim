@@ -5,8 +5,154 @@ import random
 #GENERAL: height-weight-speed-age
 #OFFENSE: inside-midrange-outside-passing-handling
 #DEFENSE: steal-block-intd-outd-rebounding
-#def generate_player(pref_pos):
-    #choose 5(?) of these 
+def generate_player(pref_pos):
+    #default values
+    height     = 78 #6'6"
+    weight     = 180
+    speed      = 75
+    age        = 25
+    int_s      = 75
+    mid_s      = 75
+    out_s      = 75
+    passing    = 75
+    handling   = 75
+    steal      = 75
+    block      = 75
+    int_d      = 75
+    out_d      = 75
+    rebounding = 75
+    if pref_pos==1: #point guard
+        print("\nPOINT GUARD")
+        height -= random.randint(3, 6)
+        weight -= random.randint(0, 30)
+        speed += random.randint(5, 10)
+        int_s -= random.randint(8, 16)
+        mid_s += random.randint(0, 10) - 5
+        out_s += random.randint(0, 10) - 5
+        passing += random.randint(0, 10)
+        handling += random.randint(0, 10)
+        steal += random.randint(0, 10) - 2
+        block -= random.randint(20, 40)
+        int_d -= random.randint(8, 16)
+        out_d += random.randint(0, 10) - 5
+        rebounding -= random.randint(10, 30)
+    elif pref_pos==2: #shooting guard
+        print("\nSHOOTING GUARD")
+        height += random.randint(0, 4) - 3
+        weight += random.randint(0, 30) - 15
+        speed += random.randint(0, 6)
+        int_s += random.randint(0, 16) - 8
+        mid_s += random.randint(0, 13) - 5
+        out_s += random.randint(0, 13) - 5
+        passing += random.randint(0, 10) - 3
+        handling += random.randint(0, 10) - 2
+        steal += random.randint(0, 10) - 5
+        block -= random.randint(10, 30)
+        int_d -= random.randint(5, 10)
+        out_d += random.randint(0, 10) - 5
+        rebounding -= random.randint(5, 15)
+    elif pref_pos==3: #small forward
+        print("\nSMALL FORWARD")
+        height += random.randint(0, 6) - 2
+        weight += random.randint(0, 40) - 10
+        speed += random.randint(0, 16) - 8
+        int_s += random.randint(0, 20) - 8
+        mid_s += random.randint(0, 20) - 10
+        out_s += random.randint(0, 20) - 10
+        passing += random.randint(0, 20) - 10
+        handling += random.randint(0, 20) - 10
+        steal += random.randint(0, 20) - 10
+        block += random.randint(0, 15) - 5
+        int_d += random.randint(0, 15) - 5
+        out_d += random.randint(0, 15) - 5
+        rebounding += random.randint(0, 15) - 5
+    elif pref_pos==4: #power forward
+        print("\nPOWER FORWARD")
+        height += random.randint(1, 7)
+        weight += random.randint(20, 60)
+        speed += random.randint(0, 15) - 15
+        int_s += random.randint(0, 20) - 5
+        mid_s += random.randint(0, 16) - 8
+        out_s += random.randint(0, 12) - 6
+        passing += random.randint(0, 20) - 20
+        handling += random.randint(0, 20) - 20
+        steal += random.randint(0, 20) - 20
+        block += random.randint(0, 20) - 5
+        int_d += random.randint(0, 20) - 5
+        out_d += random.randint(0, 10) - 8
+        rebounding += random.randint(0, 20) - 5
+    elif pref_pos==5: #center
+        print("\nCENTER")
+        height += random.randint(2, 12)
+        weight += random.randint(40, 80)
+        speed += random.randint(0, 20) - 30
+        int_s += random.randint(5, 15)
+        mid_s += random.randint(0, 20) - 20
+        out_s += random.randint(0, 30) - 45
+        passing += random.randint(0, 20) - 40
+        handling += random.randint(0, 30) - 40
+        steal += random.randint(0, 30) - 40
+        block += random.randint(5, 15)
+        int_d += random.randint(5, 15)
+        out_d += random.randint(0, 20) - 30
+        rebounding += random.randint(5, 15)
+    #choose 5(?) of these "attributes" to make a player. Some are good, some bad, some funny
+    list_attributes = ["Passer", "3pt Specialist", "Blocker", "Tall", "Short", "On-ball Defense", "Rebounder", "Fumbler", "Fatty", "Slow", "No Threes", "Dunker", "Defensive Liability", "Offensive Liability",
+                       "Mid-range Specialist", "High Ceiling", "The Wall"]
+    num_att = 0
+    tries = 0
+    gained_attributes = []
+    while num_att<5 or tries>10:
+        att = random.randint(0, len(list_attributes)-1)
+        gained_attributes.append(list_attributes[att])
+        num_att+=1
+    for a in gained_attributes:
+        print(a)
+        if a=="Passer":
+            passing += random.randint(10, 15)
+        elif a=="3pt Specialist":
+            out_s += random.randint(8, 12)
+        elif a=="Blocker":
+            block += random.randint(10, 15)
+        elif a=="Tall":
+            height += random.randint(4,8)
+        elif a=="Short":
+            height -= random.randint(3,5)
+        elif a=="On-ball Defense":
+            steal += random.randint(5, 10)
+            out_d += random.randint(5, 10)
+        elif a=="Rebounder":
+            rebounding += random.randint(10, 15)
+            height += random.randint(0, 2)
+        elif a=="Fumbler":
+            passing -= random.randint(10, 15)
+            handling -= random.randint(10, 15)
+        elif a=="Fatty":
+            weight += random.randint(50, 100)
+        elif a=="Slow":
+            speed -= random.randint(20, 40)
+        elif a=="No Threes":
+            out_s -= random.randint(20, 30)
+        elif a=="Dunker":
+            int_s += random.randint(15, 20)
+        elif a=="Defensive Liability":
+            steal -= random.randint(5, 10)
+            block -= random.randint(5, 10)
+            int_d -= random.randint(5, 10)
+            out_d -= random.randint(5, 10)
+        elif a=="Offensive Liability":
+            int_s -= random.randint(5, 10)
+            out_s -= random.randint(5, 10)
+            mid_s -= random.randint(5, 10)
+        elif a=="Mid-range Specialist":
+            mid_s += random.randint(12, 17)
+        elif a=="High Ceiling":
+            #potential bump
+            age -= 1
+        elif a=="The Wall":
+            int_d += random.randint(12, 17)
+            block += random.randint(6, 12)
+    return bbplayer("Generic", height, weight, speed, age, int_s, mid_s, out_s, passing, handling, steal, block, int_d, out_d, rebounding)
         
 class bbplayer:  
     #2manystats
@@ -68,33 +214,47 @@ class bbplayer:
         self.stats_tot_stl += self.stats_stl
         self.stats_stl = 0
         self.stats_tot_blk += self.stats_blk
-        self.stats_blk = 0   
-    
+        self.stats_blk = 0
+    '''
+        for x in xrange(len(stats_array)):
+            stats_array[x][1] += stats_array[x]
+            stats_array[x] = 0
+    '''
+    @property
     def get_ppg(self):
         return self.stats_tot_pts/self.stats_gms
+    @property
     def get_fgp(self):
         if self.stats_tot_fga > 0:
             return self.stats_tot_fgm/self.stats_tot_fga
         else: return 0
+    @property
     def get_3fp(self):
         if self.stats_tot_3ga > 0:
             return self.stats_tot_3gm/self.stats_tot_3ga
         else: return 0
+    @property
     def get_rpg(self):
         return self.stats_tot_reb/self.stats_gms
+    @property
     def get_apg(self):
         return self.stats_tot_ass/self.stats_gms
+    @property
     def get_spg(self):
         return self.stats_tot_stl/self.stats_gms
+    @property
     def get_bpg(self):
         return self.stats_tot_blk/self.stats_gms
+        
+    def print_ratings(self, labels): #labels = 1 if they want headings, 0 if jsut raw stats
+        if labels==1:
+            print("NAME:        | HT|WGT|AG|SP|IN|MD|OT|PS|HD|ST|BL|ID|OD|RB|")
+        print("{name:<13}|".format(name=self.name), self.height, self.weight, self.age, self.speed, self.int_s, self.mid_s, self.out_s, self.passing, self.handling, self.steal, self.block, self.int_d, self.out_d, self.rebounding)
     
     def print_pergame_boxplayer(self):
-        #print(self.name,"      | ",int(self.get_ppg())," | ",int(self.get_fgp()*100)," | ",int(self.get_3fp()*100)," | ",int(self.get_rpg())," | ",int(self.get_apg())," | ",int(self.get_spg())," | ",int(self.get_bpg()))
         print("{name:<13}| {ppg:<4} | {fgp:<4} | {fp3:<4} | {reb:<4} | {ass:<4} | {stl:<4}| {blk:<4}".format(name=self.name, ppg=int(self.get_ppg()*10)/10, fgp=int(self.get_fgp()*1000)/10, fp3=int(self.get_3fp()*1000)/10,
               reb=int(self.get_rpg()*10)/10, ass=int(self.get_apg()*10)/10, stl=int(self.get_spg()*10)/10, blk=int(self.get_bpg()*10)/10))
     def print_boxplayer(self):
-        #print(self.name," | ",self.stats_pts," | ",self.stats_fgm,"/",self.stats_fga," | ",self.stats_3gm,"/",self.stats_3ga," | ",self.stats_reb," | ",self.stats_ass," | ",self.stats_stl," | ",self.stats_blk)
         print("{name:<13}|  {points:<3} | {fgm:<2}/ {fga:<2} | {gm3:<2}/ {ga3:<2} |  {rebounds:<3} |  {assists:<3} |  {steals:<3} |  {blocks:<3}".format(name=self.name, points=self.stats_pts, fgm=self.stats_fgm, 
               fga=self.stats_fga, gm3=self.stats_3gm, ga3=self.stats_3ga, rebounds=self.stats_reb, assists=self.stats_ass, steals=self.stats_stl, blocks=self.stats_blk))
         
@@ -114,6 +274,15 @@ class team:
         self.powerf.game_reset_pstats()
         self.center.game_reset_pstats()
     
+    def print_team_ratings(self):
+        print(self.name)
+        print("NAME:        | HT|WGT|AG|SP|IN|MD|OT|PS|HD|ST|BL|ID|OD|RB|")
+        self.pointg.print_ratings(0)
+        self.shootg.print_ratings(0)
+        self.smallf.print_ratings(0)
+        self.powerf.print_ratings(0)
+        self.center.print_ratings(0)
+    
     def print_pergame_box(self):
         print("PER GAME AVG | PPG  | FG%  | 3G%  | RPG  | APG  | SPG | BPG")
         self.pointg.print_pergame_boxplayer()
@@ -130,8 +299,7 @@ class team:
         tot_apg = self.pointg.get_apg() + self.shootg.get_apg() + self.smallf.get_apg() + self.powerf.get_apg() + self.center.get_apg()
         tot_spg = self.pointg.get_spg() + self.shootg.get_spg() + self.smallf.get_spg() + self.powerf.get_spg() + self.center.get_spg()
         tot_bpg = self.pointg.get_bpg() + self.shootg.get_bpg() + self.smallf.get_bpg() + self.powerf.get_bpg() + self.center.get_bpg()
-        print("--------------------------------------------------------------------")
-        #print("TOTAL:       | ",int(tot_ppg)," | ",int(tot_fgp*100)," | ",int(tot_3fp*100)," | ",int(tot_rpg),"| ",int(tot_apg),"| ",int(tot_spg)," | ",int(tot_bpg))
+        print("-----------------------------------------------------------")
         print("TOTAL:       | {ppg:<5}| {fgp:<4} | {fp3:<4} | {reb:<4} | {ass:<4} | {stl:<4}| {blk:<4}".format(ppg=int(tot_ppg*10)/10, fgp=int(tot_fgp*1000)/10, fp3=int(tot_3fp*1000)/10, reb=int(tot_rpg*10)/10,
               ass=int(tot_apg*10)/10, stl=int(tot_spg*10)/10, blk=int(tot_bpg*10)/10))
     
@@ -152,7 +320,6 @@ class team:
         tot_stl = self.pointg.stats_stl + self.shootg.stats_stl + self.smallf.stats_stl + self.powerf.stats_stl + self.center.stats_stl
         tot_blk = self.pointg.stats_blk + self.shootg.stats_blk + self.smallf.stats_blk + self.powerf.stats_blk + self.center.stats_blk
         print("----------------------------------------------------------")
-        #print("TOTAL:  | ",tot_pts," | ",tot_fgm,"/",tot_fga," | ",tot_3gm,"/",tot_3ga," | ",tot_reb," | ",tot_ass," | ",tot_stl," | ",tot_blk)
         print("TOTAL:       |  {points:<3} | {fgm:<2}/ {fga:<2} | {gm3:<2}/ {ga3:<2} |  {rebounds:<3} |  {assists:<3} |  {steals:<3} |  {blocks:<3}".format(points=tot_pts, fgm=tot_fgm, fga=tot_fga,
               gm3=tot_3gm, ga3=tot_3ga, rebounds=tot_reb, assists=tot_ass, steals=tot_stl, blocks=tot_blk))
 
@@ -238,7 +405,6 @@ def playgame(home, away, prplay, prbox): #home team, away team, print play-by-pl
     
     #return winner
     if hscore > ascore:
-        #home team has won
         return home
     else: return away
 
@@ -293,7 +459,7 @@ def run_play(offense, defense, prplay): #take it possession at time yo
             points = take_shot(who_poss, who_def, defense, assister, prplay)
             if points > 0:
                 #made it!
-                if assister.name == who_poss.name:
+                if assister == who_poss:
                     if prplay==1: print(who_poss.name, "made a", points, "pt shot")
                     return points
                 else:
@@ -301,10 +467,10 @@ def run_play(offense, defense, prplay): #take it possession at time yo
                     if prplay==1: print(who_poss.name, "made a", points, "pt shot with an assist from", assister.name)
                     return points
             else:
-                #print(who_poss.name, "misses!")
                 #rebounding, defenders have 3:1 advantage
                 #weighted rebounding advantage calculator, maybe add height adv too l8r
                 reb_adv = (defense.center.rebounding - offense.center.rebounding) + (defense.powerf.rebounding - offense.powerf.rebounding)*0.85 + (defense.smallf.rebounding - offense.smallf.rebounding)*0.7 + (defense.shootg.rebounding - offense.shootg.rebounding)*0.5 + (defense.pointg.rebounding - offense.pointg.rebounding)*0.25
+                reb_adv *= 0.5
                 if (random.random()*100 + reb_adv) > 25: #defensive reb
                     rebounder = find_rebounder(defense)
                     if prplay==1: print(rebounder.name,"grabs the defensive rebound!")
@@ -410,7 +576,7 @@ def take_shot(shooter, defender, defense, assister, prplay): #return points of s
             return 0
 
 if __name__ == "__main__":
-
+    """
     # ------------------|  NAME  |HGT|WTLB|SPD|AGE|INS|MID|OUT|PSS|HND|STL|BLK|IND|OTD|REB| 
     StanPoint = bbplayer("Pointy", 72, 150, 90, 25, 75, 75, 75, 99, 90, 80, 30, 30, 80, 20)
     StanShoot = bbplayer("Shooty", 76, 180, 80, 25, 75, 85, 95, 75, 75, 50, 50, 50, 75, 40)
@@ -423,9 +589,28 @@ if __name__ == "__main__":
     StanShoo2 = bbplayer("3Shoot", 76, 180, 80, 25, 99, 99, 99, 99, 75, 50, 50, 50, 75, 40)
     StanSmal2 = bbplayer("Onlydf", 80, 200, 80, 25, 99, 99, 99, 99, 75, 85, 70, 75, 80, 75)
     StanPowe2 = bbplayer("Power2", 82, 220, 60, 25, 99, 99, 99, 99, 75, 60, 90, 85, 70, 85)
-    StanCente2= bbplayer("Cente2", 84, 250, 40, 25, 99, 99, 99, 99, 50, 40, 90, 90, 50, 90)
-
+    StanCente2= bbplayer("Cente2", 84, 250, 40, 25, 99, 99, 99, 99, 50, 40, 90, 90, 50, 90)"""
+    print("\n*** Average Joes' attributes: ***")
+    StanPoint = generate_player(1)
+    StanShoot = generate_player(2)
+    StanSmall = generate_player(3)
+    StanPower = generate_player(4)
+    StanCenter= generate_player(5)
     
+    print("\n*** The Not Bads' attributes: ***")
+    StanPoin2 = generate_player(1)
+    StanShoo2 = generate_player(2)
+    StanSmal2 = generate_player(3)
+    StanPowe2 = generate_player(4)
+    StanCente2= generate_player(5)
+
     team_A = team("Average Joes", StanPoint, StanShoot, StanSmall, StanPower, StanCenter)
     team_B = team("The Not Bads", StanPoin2, StanShoo2, StanSmal2, StanPowe2, StanCente2)
     playseries(team_A, team_B, 100, 0, 1)
+    print("\n")
+    team_A.print_team_ratings()
+    #print("\n")
+    team_B.print_team_ratings()
+    #generate_player(5)
+
+    
