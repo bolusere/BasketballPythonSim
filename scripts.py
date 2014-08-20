@@ -1,6 +1,22 @@
 from classes import *
 import random
 
+def calc_mismatch(shooter, defender, pr):
+    int_mis = 2*shooter.int_s - defender.int_d
+    mid_mis = 2*shooter.mid_s - (defender.out_d + defender.int_d)/2
+    out_mis = 2*shooter.out_s - defender.out_d
+    if pr==1: print(int_mis + mid_mis + out_mis)
+    return int_mis + mid_mis + out_mis
+
+def detect_mismatch(offense, defense, pr):
+    pg_diff = calc_mismatch(offense.pointg, defense.pointg, pr)
+    sg_diff = calc_mismatch(offense.shootg, defense.shootg, pr)
+    sf_diff = calc_mismatch(offense.smallf, defense.smallf, pr)
+    pf_diff = calc_mismatch(offense.powerf, defense.powerf, pr)
+    cn_diff = calc_mismatch(offense.center, defense.center, pr)
+    matches = [pg_diff, sg_diff, sf_diff, pf_diff, cn_diff]
+    return matches
+
 def draft(num_players):
     player_list = []
     for x in xrange(num_players):
@@ -31,11 +47,11 @@ def find_rebounder(team): #who shall receive the rebounding blessing?
     else:
         team.pointg.stats_reb += 1
         return team.pointg
+
 #player needs
 #GENERAL: height-weight-speed-age
 #OFFENSE: inside-midrange-outside-passing-handling
 #DEFENSE: steal-block-intd-outd-rebounding
-
 def generate_player(pref_pos):
     #default values
     height     = 78 #6'6"
@@ -198,6 +214,31 @@ def generate_player(pref_pos):
             passing -= random.randint(5, 15)
     return bbplayer("Generic", height, weight, speed, age, int_s, mid_s, out_s, passing, handling, steal, block, int_d, out_d, rebounding)
 
+def intelligent_pass(who_poss, offense, defense, matches):
+    sorted_matches = sorted(matches)
+    
+    if random.random()<0.3: #30% chance to pass to greatest mismatch (add in bball IQ later to have higher chance?)
+        target = sorted_matches[4]
+    elif random.random()<0.3:
+        target = sorted_matches[3]
+    elif random.random()<0.3:
+        target = sorted_matches[2]
+    elif random.random()<0.3:
+        target = sorted_matches[1]
+    else:
+        target = sorted_matches[0]
+    
+    if target == matches[0]: #pg target of pass
+        return offense.pointg
+    elif target == matches[1]: #sg target of pass
+        return offense.shootg
+    elif target == matches[2]: #sf target of pass
+        return offense.smallf
+    elif target == matches[3]: #pf target of pass
+        return offense.powerf
+    elif target == matches[4]: #cn target of pass
+        return offense.center
+
 def playseries(team1, team2, numgames, prbox, prend):
     wins1 = 0
     wins2 = 0
@@ -243,15 +284,16 @@ def playgame(home, away, prplay, prbox): #home team, away team, print play-by-pl
     hspeed = (home.pointg.speed + home.shootg.speed + home.smallf.speed) / 300
     aspeed = (away.pointg.speed + away.shootg.speed + away.smallf.speed) / 300
     playing = True
-    
+    matches_h = detect_mismatch(home, away, 0)
+    matches_a = detect_mismatch(away, home, 0)
     while playing: #40min games
         if poss_home:
-            hscore += run_play(home, away, prplay)
+            hscore += run_play(home, away, matches_h, prplay)
             poss_away = 1
             poss_home = 0
             gametime += 24 * random.random() / hspeed
         elif poss_away:
-            ascore += run_play(away, home, prplay)
+            ascore += run_play(away, home, matches_h, prplay)
             poss_away = 0
             poss_home = 1
             gametime += 24 * random.random() / aspeed
@@ -291,7 +333,7 @@ def pot_steal(poss, stlr): #see if the pass is stolen, return 1 if it is
         else: return 0
     else: return 0
 
-def run_play(offense, defense, prplay): #take it possession at time yo
+def run_play(offense, defense, matches, prplay): #take it possession at time yo
     if prplay==1: print(offense.name, "have the ball.")
     passes = 0
     off_poss = 1
@@ -299,31 +341,27 @@ def run_play(offense, defense, prplay): #take it possession at time yo
     who_def  = defense.pointg
     assister = who_poss
     while off_poss == 1:
-        passprob = who_poss.passing / who_poss.ovrshoot
-        if random.random() * passprob > 0.2:
+        mismatch = calc_mismatch(who_poss, who_def, 0)
+        if random.randint(passes,6) < 5 or (passes==0 and random.random()>0.95):
             #pass
+            passes+=1
             ifsteal = pot_steal(who_poss, who_def)
             if ifsteal == 1:
                 #stolen
                 if prplay==1: print(who_def.name, "has stolen the ball!")
                 who_def.stats_stl += 1
                 return 0
-            pass_to = random.randint(1, 5)
             assister = who_poss
-            if pass_to == 1:
-                who_poss = offense.pointg
+            who_poss = intelligent_pass(who_poss, offense, defense, matches)
+            if who_poss == offense.pointg:
                 who_def  = defense.pointg
-            if pass_to == 2:
-                who_poss = offense.shootg
+            if who_poss == offense.shootg:
                 who_def  = defense.shootg
-            if pass_to == 3:
-                who_poss = offense.smallf
+            if who_poss == offense.smallf:
                 who_def  = defense.smallf
-            if pass_to == 4:
-                who_poss = offense.powerf
+            if who_poss == offense.powerf:
                 who_def  = defense.powerf
-            if pass_to == 5:
-                who_poss = offense.center
+            if who_poss == offense.center:
                 who_def  = defense.center
         else:
             #shoot
@@ -351,22 +389,21 @@ def run_play(offense, defense, prplay): #take it possession at time yo
                     if prplay==1: print(rebounder.name,"snatches the offensive rebound!")
                     who_poss = rebounder
 
-#def pass_or_shoot(who_poss, offense, defense):
 def take_shot(shooter, defender, defense, assister, prplay): #return points of shot, 0 if miss
     #give assist bonus for having a good passer pass to you
     ass_bonus = 0
-    if assister.name != shooter.name:
+    if assister != shooter:
         ass_bonus = assister.passing / 20
     #block?
-    if random.random() * (defender.block + (defender.height - shooter.height)) > 75 or random.random() < 0.005:
+    if random.random() * (defender.block + (defender.height - shooter.height)) > 80 or random.random() < 0.005:
         #NOT IN MY HOUSE MOFO
         if prplay==1: print(defender.name,"has blocked",shooter.name,"!")
         shooter.stats_fga += 1
         defender.stats_blk += 1
         return 0
-    if shooter.out_s * random.random() > 40 or (shooter.out_s > (shooter.int_s + shooter.mid_s) and random.random() > 0.25): #second part is where guy is clearly 3pt specialist, ie 25/50/99
+    if (shooter.out_s * random.random() > 40 and shooter.out_s > (50 + 25*random.random())) or (shooter.out_s > (shooter.int_s + shooter.mid_s) and random.random() > 0.25): #second part is where guy is clearly 3pt specialist, ie 25/50/99
         #3pt shot
-        chance = (shooter.out_s / defender.out_d) * random.random() * 70 + ass_bonus + shooter.out_s/10 #70 norm multy
+        chance = (shooter.out_s / defender.out_d) * random.random() * 70 + ass_bonus + (shooter.out_s - 75)/3 #70 norm multy
         if chance > 60:
             #made it!
             shooter.stats_pts += 3
@@ -380,9 +417,9 @@ def take_shot(shooter, defender, defense, assister, prplay): #return points of s
             shooter.stats_fga += 1
             shooter.stats_3ga += 1
             return 0
-    elif shooter.mid_s * random.random() > 50: 
+    elif shooter.mid_s * random.random() > 50 and shooter.mid_s > (50 + 20*random.random()): 
         #midrange jumper
-        chance = (shooter.mid_s / defender.out_d) * random.random() * 80 + ass_bonus + shooter.mid_s/10 #80 norm multy
+        chance = (shooter.mid_s / (defender.out_d*0.5 + 0.5*defender.int_d)) * random.random() * 80 + ass_bonus + (shooter.mid_s - 75)/3 #80 norm multy
         if chance > 50:
             #made it!
             shooter.stats_pts += 2
@@ -395,7 +432,7 @@ def take_shot(shooter, defender, defense, assister, prplay): #return points of s
             return 0
     else:
         #inside layup/dunk/etc
-        chance = ((shooter.int_s / defender.int_d) * random.random() * 80) + ass_bonus + shooter.int_s/10 # - random.random()*((defense.center.int_d + defense.powerf.int_d + defense.smallf.int_d*0.75)/5)
+        chance = ((shooter.int_s / defender.int_d) * random.random() * 80) + ass_bonus + (shooter.int_s - 75)/3 # - random.random()*((defense.center.int_d + defense.powerf.int_d + defense.smallf.int_d*0.75)/5)
         if chance > 50:
             #made it!
             if random.random() < 0.3:
