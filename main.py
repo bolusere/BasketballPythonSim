@@ -39,3 +39,7 @@ if __name__ == "__main__":
     #print("\n")
     team_B.print_team_ratings()
     #generate_player(5)
+    print("\nJoes Mismatches:")
+    detect_mismatch(team_A, team_B, 1)
+    print("\nBads Mismatches:")
+    detect_mismatch(team_B, team_A, 1)
