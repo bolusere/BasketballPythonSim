@@ -90,7 +90,7 @@ if __name__ == "__main__":
 
     team_A = team("Average Joes", StanPoint, StanShoot, StanSmall, StanPower, StanCenter)
     team_B = team("The Not Bads", StanPoin2, StanShoo2, StanSmal2, StanPowe2, StanCente2)
-    playseries(team_A, team_B, 100, 0, 1)
+    playseries(team_A, team_B, 5, 1, 1)
     print("\n")
     team_A.print_team_ratings()
     #print("\n")
