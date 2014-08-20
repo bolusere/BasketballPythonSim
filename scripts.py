@@ -2,7 +2,11 @@ from classes import *
 import random
 
 def draft(num_players):
-    return 0
+    player_list = []
+    for x in xrange(num_players):
+        position = round(random.random() * 5)
+        player_list.append(generate_player(position))
+    return player_list
 
 def find_rebounder(team): #who shall receive the rebounding blessing?
     cenreb = random.random()*team.center.rebounding*1.2

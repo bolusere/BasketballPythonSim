@@ -17,6 +17,7 @@ if __name__ == "__main__":
     StanSmal2 = bbplayer("Onlydf", 80, 200, 80, 25, 99, 99, 99, 99, 75, 85, 70, 75, 80, 75)
     StanPowe2 = bbplayer("Power2", 82, 220, 60, 25, 99, 99, 99, 99, 75, 60, 90, 85, 70, 85)
     StanCente2= bbplayer("Cente2", 84, 250, 40, 25, 99, 99, 99, 99, 50, 40, 90, 90, 50, 90)"""
+    player_list = draft(50)
     print("\n*** Average Joes' attributes: ***")
     StanPoint = generate_player(1)
     StanShoot = generate_player(2)
