@@ -5,6 +5,9 @@ import random
 #GENERAL: height-weight-speed-age
 #OFFENSE: inside-midrange-outside-passing-handling
 #DEFENSE: steal-block-intd-outd-rebounding
+#def generate_player(pref_pos):
+    #choose 5(?) of these 
+        
 class bbplayer:  
     #2manystats
     stats_pts = 0
@@ -87,9 +90,13 @@ class bbplayer:
         return self.stats_tot_blk/self.stats_gms
     
     def print_pergame_boxplayer(self):
-        print(self.name,"      | ",int(self.get_ppg())," | ",int(self.get_fgp()*100)," | ",int(self.get_3fp()*100)," | ",int(self.get_rpg())," | ",int(self.get_apg())," | ",int(self.get_spg())," | ",int(self.get_bpg()))
+        #print(self.name,"      | ",int(self.get_ppg())," | ",int(self.get_fgp()*100)," | ",int(self.get_3fp()*100)," | ",int(self.get_rpg())," | ",int(self.get_apg())," | ",int(self.get_spg())," | ",int(self.get_bpg()))
+        print("{name:<13}| {ppg:<4} | {fgp:<4} | {fp3:<4} | {reb:<4} | {ass:<4} | {stl:<4}| {blk:<4}".format(name=self.name, ppg=int(self.get_ppg()*10)/10, fgp=int(self.get_fgp()*1000)/10, fp3=int(self.get_3fp()*1000)/10,
+              reb=int(self.get_rpg()*10)/10, ass=int(self.get_apg()*10)/10, stl=int(self.get_spg()*10)/10, blk=int(self.get_bpg()*10)/10))
     def print_boxplayer(self):
-        print(self.name," | ",self.stats_pts," | ",self.stats_fgm,"/",self.stats_fga," | ",self.stats_3gm,"/",self.stats_3ga," | ",self.stats_reb," | ",self.stats_ass," | ",self.stats_stl," | ",self.stats_blk)
+        #print(self.name," | ",self.stats_pts," | ",self.stats_fgm,"/",self.stats_fga," | ",self.stats_3gm,"/",self.stats_3ga," | ",self.stats_reb," | ",self.stats_ass," | ",self.stats_stl," | ",self.stats_blk)
+        print("{name:<13}|  {points:<3} | {fgm:<2}/ {fga:<2} | {gm3:<2}/ {ga3:<2} |  {rebounds:<3} |  {assists:<3} |  {steals:<3} |  {blocks:<3}".format(name=self.name, points=self.stats_pts, fgm=self.stats_fgm, 
+              fga=self.stats_fga, gm3=self.stats_3gm, ga3=self.stats_3ga, rebounds=self.stats_reb, assists=self.stats_ass, steals=self.stats_stl, blocks=self.stats_blk))
         
 class team:
     def __init__(self, name, pointg, shootg, smallf, powerf, center):
@@ -108,24 +115,28 @@ class team:
         self.center.game_reset_pstats()
     
     def print_pergame_box(self):
-        print("PER GAME AVG | PPG  | FG%  | 3G%  | RPG | APG | SPG | BPG")
+        print("PER GAME AVG | PPG  | FG%  | 3G%  | RPG  | APG  | SPG | BPG")
         self.pointg.print_pergame_boxplayer()
         self.shootg.print_pergame_boxplayer()
         self.smallf.print_pergame_boxplayer()
         self.powerf.print_pergame_boxplayer()
         self.center.print_pergame_boxplayer()
         tot_ppg = self.pointg.get_ppg() + self.shootg.get_ppg() + self.smallf.get_ppg() + self.powerf.get_ppg() + self.center.get_ppg()
-        tot_fgp = (self.pointg.stats_tot_fgm + self.shootg.stats_tot_fgm+ self.smallf.stats_tot_fgm + self.powerf.stats_tot_fgm + self.center.stats_tot_fgm)/(self.pointg.stats_tot_fga + self.shootg.stats_tot_fga+ self.smallf.stats_tot_fga + self.powerf.stats_tot_fga + self.center.stats_tot_fga)
-        tot_3fp = (self.pointg.stats_tot_3gm + self.shootg.stats_tot_3gm+ self.smallf.stats_tot_3gm + self.powerf.stats_tot_3gm + self.center.stats_tot_3gm)/(self.pointg.stats_tot_3ga + self.shootg.stats_tot_3ga+ self.smallf.stats_tot_3ga + self.powerf.stats_tot_3ga + self.center.stats_tot_3ga)
+        tot_fgp = (self.pointg.stats_tot_fgm + self.shootg.stats_tot_fgm+ self.smallf.stats_tot_fgm + self.powerf.stats_tot_fgm +
+                   self.center.stats_tot_fgm)/(self.pointg.stats_tot_fga + self.shootg.stats_tot_fga+ self.smallf.stats_tot_fga + self.powerf.stats_tot_fga + self.center.stats_tot_fga)
+        tot_3fp = (self.pointg.stats_tot_3gm + self.shootg.stats_tot_3gm+ self.smallf.stats_tot_3gm + self.powerf.stats_tot_3gm + 
+                   self.center.stats_tot_3gm)/(self.pointg.stats_tot_3ga + self.shootg.stats_tot_3ga+ self.smallf.stats_tot_3ga + self.powerf.stats_tot_3ga + self.center.stats_tot_3ga)
         tot_rpg = self.pointg.get_rpg() + self.shootg.get_rpg() + self.smallf.get_rpg() + self.powerf.get_rpg() + self.center.get_rpg()
         tot_apg = self.pointg.get_apg() + self.shootg.get_apg() + self.smallf.get_apg() + self.powerf.get_apg() + self.center.get_apg()
         tot_spg = self.pointg.get_spg() + self.shootg.get_spg() + self.smallf.get_spg() + self.powerf.get_spg() + self.center.get_spg()
         tot_bpg = self.pointg.get_bpg() + self.shootg.get_bpg() + self.smallf.get_bpg() + self.powerf.get_bpg() + self.center.get_bpg()
         print("--------------------------------------------------------------------")
-        print("TOTAL:       | ",int(tot_ppg)," | ",int(tot_fgp*100)," | ",int(tot_3fp*100)," | ",int(tot_rpg),"| ",int(tot_apg),"| ",int(tot_spg)," | ",int(tot_bpg))
+        #print("TOTAL:       | ",int(tot_ppg)," | ",int(tot_fgp*100)," | ",int(tot_3fp*100)," | ",int(tot_rpg),"| ",int(tot_apg),"| ",int(tot_spg)," | ",int(tot_bpg))
+        print("TOTAL:       | {ppg:<5}| {fgp:<4} | {fp3:<4} | {reb:<4} | {ass:<4} | {stl:<4}| {blk:<4}".format(ppg=int(tot_ppg*10)/10, fgp=int(tot_fgp*1000)/10, fp3=int(tot_3fp*1000)/10, reb=int(tot_rpg*10)/10,
+              ass=int(tot_apg*10)/10, stl=int(tot_spg*10)/10, blk=int(tot_bpg*10)/10))
     
     def print_box(self):
-        print("NAME:   | PTS | FGM/FGA | 3GM/3GA | REB | ASS | STL | BLK")
+        print("NAME:        |  PTS | FGM/FGA| 3GM/3GA| REB  | ASS  | STL  | BLK")
         self.pointg.print_boxplayer()
         self.shootg.print_boxplayer()
         self.smallf.print_boxplayer()
@@ -141,7 +152,9 @@ class team:
         tot_stl = self.pointg.stats_stl + self.shootg.stats_stl + self.smallf.stats_stl + self.powerf.stats_stl + self.center.stats_stl
         tot_blk = self.pointg.stats_blk + self.shootg.stats_blk + self.smallf.stats_blk + self.powerf.stats_blk + self.center.stats_blk
         print("----------------------------------------------------------")
-        print("TOTAL:  | ",tot_pts," | ",tot_fgm,"/",tot_fga," | ",tot_3gm,"/",tot_3ga," | ",tot_reb," | ",tot_ass," | ",tot_stl," | ",tot_blk)
+        #print("TOTAL:  | ",tot_pts," | ",tot_fgm,"/",tot_fga," | ",tot_3gm,"/",tot_3ga," | ",tot_reb," | ",tot_ass," | ",tot_stl," | ",tot_blk)
+        print("TOTAL:       |  {points:<3} | {fgm:<2}/ {fga:<2} | {gm3:<2}/ {ga3:<2} |  {rebounds:<3} |  {assists:<3} |  {steals:<3} |  {blocks:<3}".format(points=tot_pts, fgm=tot_fgm, fga=tot_fga,
+              gm3=tot_3gm, ga3=tot_3ga, rebounds=tot_reb, assists=tot_ass, steals=tot_stl, blocks=tot_blk))
 
 def playseries(team1, team2, numgames, prbox, prend):
     wins1 = 0
@@ -277,7 +290,7 @@ def run_play(offense, defense, prplay): #take it possession at time yo
                 who_def  = defense.center
         else:
             #shoot
-            points = take_shot(who_poss, who_def, defense, prplay)
+            points = take_shot(who_poss, who_def, defense, assister, prplay)
             if points > 0:
                 #made it!
                 if assister.name == who_poss.name:
@@ -300,13 +313,16 @@ def run_play(offense, defense, prplay): #take it possession at time yo
                     rebounder = find_rebounder(offense)
                     if prplay==1: print(rebounder.name,"snatches the offensive rebound!")
                     who_poss = rebounder
-   
+
+#def pass_or_shoot(who_poss, offense, defense):
+    
+
 def find_rebounder(team): #who shall receive the rebounding blessing?
-    cenreb = random.random()*team.center.rebounding*1.3
-    powreb = random.random()*team.powerf.rebounding*1.15
+    cenreb = random.random()*team.center.rebounding*1.2
+    powreb = random.random()*team.powerf.rebounding*1.1
     smfreb = random.random()*team.smallf.rebounding
-    shgreb = random.random()*team.shootg.rebounding*0.8
-    ptgreb = random.random()*team.pointg.rebounding*0.65
+    shgreb = random.random()*team.shootg.rebounding*0.9
+    ptgreb = random.random()*team.pointg.rebounding*0.8
     listreb = [cenreb, powreb, smfreb, shgreb, ptgreb]
     listreb.sort()
     if listreb[4]==cenreb:
@@ -334,7 +350,11 @@ def pot_steal(poss, stlr): #see if the pass is stolen, return 1 if it is
         else: return 0
     else: return 0
 
-def take_shot(shooter, defender, defense, prplay): #return points of shot, 0 if miss
+def take_shot(shooter, defender, defense, assister, prplay): #return points of shot, 0 if miss
+    #give assist bonus for having a good passer pass to you
+    ass_bonus = 0
+    if assister.name != shooter.name:
+        ass_bonus = assister.passing / 20
     #block?
     if random.random() * (defender.block + (defender.height - shooter.height)) > 75 or random.random() < 0.005:
         #NOT IN MY HOUSE MOFO
@@ -344,7 +364,7 @@ def take_shot(shooter, defender, defense, prplay): #return points of shot, 0 if 
         return 0
     if shooter.out_s * random.random() > 40 or (shooter.out_s > (shooter.int_s + shooter.mid_s) and random.random() > 0.25): #second part is where guy is clearly 3pt specialist, ie 25/50/99
         #3pt shot
-        chance = (shooter.out_s / defender.out_d) * random.random() * 70
+        chance = (shooter.out_s / defender.out_d) * random.random() * 70 + ass_bonus
         if chance > 50:
             #made it!
             shooter.stats_pts += 3
@@ -360,7 +380,7 @@ def take_shot(shooter, defender, defense, prplay): #return points of shot, 0 if 
             return 0
     elif shooter.mid_s * random.random() > 50: #50 norm
         #midrange jumper
-        chance = (shooter.mid_s / defender.out_d) * random.random() * 80
+        chance = (shooter.mid_s / defender.out_d) * random.random() * 80 + ass_bonus
         if chance > 50:
             #made it!
             shooter.stats_pts += 2
@@ -373,7 +393,7 @@ def take_shot(shooter, defender, defense, prplay): #return points of shot, 0 if 
             return 0
     else:
         #inside layup/dunk/etc
-        chance = ((shooter.int_s / defender.int_d) * random.random() * 90)# - random.random()*((defense.center.int_d + defense.powerf.int_d + defense.smallf.int_d*0.75)/5)
+        chance = ((shooter.int_s / defender.int_d) * random.random() * 90) + ass_bonus# - random.random()*((defense.center.int_d + defense.powerf.int_d + defense.smallf.int_d*0.75)/5)
         if chance > 50:
             #made it!
             if random.random() < 0.3:
@@ -392,20 +412,20 @@ def take_shot(shooter, defender, defense, prplay): #return points of shot, 0 if 
 if __name__ == "__main__":
 
     # ------------------|  NAME  |HGT|WTLB|SPD|AGE|INS|MID|OUT|PSS|HND|STL|BLK|IND|OTD|REB| 
-    StanPoint = bbplayer("Pointy", 72, 150, 90, 25, 75, 75, 75, 90, 90, 80, 30, 30, 80, 20)
+    StanPoint = bbplayer("Pointy", 72, 150, 90, 25, 75, 75, 75, 99, 90, 80, 30, 30, 80, 20)
     StanShoot = bbplayer("Shooty", 76, 180, 80, 25, 75, 85, 95, 75, 75, 50, 50, 50, 75, 40)
     StanSmall = bbplayer("Smally", 80, 200, 80, 25, 80, 85, 80, 70, 75, 85, 70, 75, 80, 75)
     StanPower = bbplayer("Powery", 82, 220, 60, 25, 80, 75, 30, 60, 75, 60, 90, 85, 70, 85)
     StanCenter= bbplayer("iBeast", 84, 250, 40, 25, 95, 50, 20, 40, 50, 40, 90, 90, 50, 90)
 
     # ------------------|  NAME  |HGT|WTLB|SPD|AGE|INS|MID|OUT|PSS|HND|STL|BLK|IND|OTD|REB|
-    StanPoin2 = bbplayer("iJesus", 72, 150, 90, 25, 75, 75, 75, 90, 90, 80, 30, 30, 80, 20)
-    StanShoo2 = bbplayer("3Shoot", 76, 180, 80, 25, 75, 85, 95, 75, 75, 50, 50, 50, 75, 40)
-    StanSmal2 = bbplayer("Onlydf", 80, 200, 80, 25, 80, 85, 80, 70, 75, 85, 70, 75, 80, 75)
-    StanPowe2 = bbplayer("Power2", 82, 220, 60, 25, 80, 75, 30, 60, 75, 60, 90, 85, 70, 85)
-    StanCente2= bbplayer("Cente2", 84, 250, 40, 25, 95, 50, 20, 40, 50, 40, 90, 90, 50, 90)
+    StanPoin2 = bbplayer("iJesus", 72, 150, 90, 25, 99, 99, 99, 99, 90, 80, 30, 30, 80, 20)
+    StanShoo2 = bbplayer("3Shoot", 76, 180, 80, 25, 99, 99, 99, 99, 75, 50, 50, 50, 75, 40)
+    StanSmal2 = bbplayer("Onlydf", 80, 200, 80, 25, 99, 99, 99, 99, 75, 85, 70, 75, 80, 75)
+    StanPowe2 = bbplayer("Power2", 82, 220, 60, 25, 99, 99, 99, 99, 75, 60, 90, 85, 70, 85)
+    StanCente2= bbplayer("Cente2", 84, 250, 40, 25, 99, 99, 99, 99, 50, 40, 90, 90, 50, 90)
 
     
     team_A = team("Average Joes", StanPoint, StanShoot, StanSmall, StanPower, StanCenter)
     team_B = team("The Not Bads", StanPoin2, StanShoo2, StanSmal2, StanPowe2, StanCente2)
-    playseries(team_A, team_B, 50, 0, 1)
+    playseries(team_A, team_B, 100, 0, 1)
