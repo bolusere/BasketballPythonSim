@@ -1,5 +1,6 @@
 from classes import *
 import random
+import math
 
 def calc_mismatch(shooter, defender, pr):
     int_mis = 2*shooter.int_s - defender.int_d
@@ -19,9 +20,13 @@ def detect_mismatch(offense, defense, pr):
 
 def draft(num_players):
     player_list = []
-    for x in xrange(num_players):
-        position = round(random.random() * 5)
-        player_list.append(generate_player(position))
+    names_list = ["a", "b", "c", "d", "e", "f", "g", "h", "i",
+                  "j", "k", "l", "m", "n", "o", "p", "q", "r",
+                  "s", "t", "u", "v", "w", "x", "y", "z"]
+    for x in range(num_players):
+        position = math.ceil(random.random() * 5)
+        name = names_list.pop(math.floor(random.random() * len(names_list)))
+        player_list.append(generate_player(position, name))
     return player_list
 
 def find_rebounder(team): #who shall receive the rebounding blessing?
@@ -52,7 +57,7 @@ def find_rebounder(team): #who shall receive the rebounding blessing?
 #GENERAL: height-weight-speed-age
 #OFFENSE: inside-midrange-outside-passing-handling
 #DEFENSE: steal-block-intd-outd-rebounding
-def generate_player(pref_pos):
+def generate_player(pref_pos, name="Generic"):
     #default values
     height     = 78 #6'6"
     weight     = 180
@@ -212,7 +217,7 @@ def generate_player(pref_pos):
             mid_s -= random.randint(5, 15)
             int_s -= random.randint(5, 15)
             passing -= random.randint(5, 15)
-    return bbplayer("Generic", height, weight, speed, age, int_s, mid_s, out_s, passing, handling, steal, block, int_d, out_d, rebounding)
+    return bbplayer(name, height, weight, speed, age, int_s, mid_s, out_s, passing, handling, steal, block, int_d, out_d, rebounding)
 
 def intelligent_pass(who_poss, offense, defense, matches):
     sorted_matches = sorted(matches)

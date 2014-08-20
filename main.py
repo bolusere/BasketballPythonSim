@@ -17,7 +17,63 @@ if __name__ == "__main__":
     StanSmal2 = bbplayer("Onlydf", 80, 200, 80, 25, 99, 99, 99, 99, 75, 85, 70, 75, 80, 75)
     StanPowe2 = bbplayer("Power2", 82, 220, 60, 25, 99, 99, 99, 99, 75, 60, 90, 85, 70, 85)
     StanCente2= bbplayer("Cente2", 84, 250, 40, 25, 99, 99, 99, 99, 50, 40, 90, 90, 50, 90)"""
-    player_list = draft(50)
+    while True:
+        try:
+            draft_size = int(input("draft size??: "))
+            if draft_size <= 0:
+                print("pick a positive integer idiot")
+            else:
+                break
+        except ValueError:
+            print("pick a positive integer idiot")
+
+    player_list = draft(draft_size)
+    print("NAME:        | HT|WGT|AG|SP|IN|MD|OT|PS|HD|ST|BL|ID|OD|RB|")
+    for x in player_list:
+        x.print_ratings(0)
+
+    ai_player = ai_opponent("Generic Baddie")
+    player_team = team.empty()
+    ai_team = team.empty()
+
+    for i in range(5):
+        successful_selection = False
+        while True:
+            player_selection = None
+            player_selection_name = input("who u want: ")
+            for player in player_list:
+                if player.name == player_selection_name:
+                    player_selection = player
+                    break
+            if player_selection != None:
+                while True:
+                    try:
+                        player_position = input("what position? ")
+                        if player_position == "back":
+                            break
+                        player_position = int(player_position)
+                        try:
+                            player_team.add_player(player_selection, player_position)
+                            player_list.remove(player_selection)
+                            successful_selection = True
+                            break
+                        except KeyError as e:
+                            print(e)
+                    except ValueError:
+                        print("Pick integer 1-5")
+                if successful_selection:
+                    break
+            else:
+                print("pick a real name idiot")
+
+        dumb_ai = 1
+        ai_team.add_player(player_list.pop(ai_player.select_player(player_list)), dumb_ai)
+        dumb_ai += 1
+        print("NAME:        | HT|WGT|AG|SP|IN|MD|OT|PS|HD|ST|BL|ID|OD|RB|")
+        for x in player_list:
+            x.print_ratings(0)
+    
+    '''
     print("\n*** Average Joes' attributes: ***")
     StanPoint = generate_player(1)
     StanShoot = generate_player(2)
@@ -44,3 +100,4 @@ if __name__ == "__main__":
     detect_mismatch(team_A, team_B, 1)
     print("\nBads Mismatches:")
     detect_mismatch(team_B, team_A, 1)
+    '''

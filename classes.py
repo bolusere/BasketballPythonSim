@@ -1,5 +1,24 @@
+import math
+import random
+
+class ai_opponent:
+    def __init__(self, name):
+        self.name = name
+
+    def select_player(self, player_list):
+        draft_position = 0
+        for x in player_list:
+            if random.random() > 0.8:
+                print(self.name, "has selected", x.name)
+                return draft_position
+            draft_position += 1
+        random_selection = math.floor(random.random() * len(player_list))
+        print(self.name, "has selected", player_list[random_selection].name)
+        return random_selection
+        #needs some sort of rating system
+
 class bbplayer:
-    #stats_array = [[0 for x in xrange(2)] 0 for x in xrange(9)]
+    #stats_array = [[0 for x in range(2)] 0 for x in range(9)]
     #2manystats
     stats_pts = 0
     stats_fga = 0
@@ -107,12 +126,45 @@ class bbplayer:
 class team:
     def __init__(self, name, pointg, shootg, smallf, powerf, center):
         self.name = name
-        self.pointg = pointg
-        self.shootg = shootg
-        self.smallf = smallf
-        self.powerf = powerf
-        self.center = center
-    
+        self.player_array = [None] * 5
+        self.player_array[0] = pointg
+        self.player_array[1] = shootg
+        self.player_array[2] = smallf
+        self.player_array[3] = powerf
+        self.player_array[4] = center
+
+    @classmethod
+    def empty(cls):
+        return cls("Your Name Here", None, None, None, None, None)
+    @property
+    def size(self):
+        _size = 0
+        for player in self.player_array:
+            if player != None:
+                _size += 1
+        return _size
+    @property
+    def pointg(self):
+        return self.player_array[0]
+    @property
+    def shootg(self):
+        return self.player_array[1]
+    @property
+    def smallf(self):
+        return self.player_array[2]
+    @property
+    def powerf(self):
+        return self.player_array[3]
+    @property
+    def center(self):
+        return self.player_array[4]
+
+    def add_player(self, player, player_position):
+        if player_position >= 1 and player_position <= 5:
+            self.player_array[player_position - 1] = player
+        else:
+            raise KeyError('Not a valid position')
+
     def game_reset_tstats(self):
         self.pointg.game_reset_pstats()
         self.shootg.game_reset_pstats()
