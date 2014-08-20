@@ -167,7 +167,8 @@ def generate_player(pref_pos):
             passing -= random.randint(5, 15)
     return bbplayer("Generic", height, weight, speed, age, int_s, mid_s, out_s, passing, handling, steal, block, int_d, out_d, rebounding)
         
-class bbplayer:  
+class bbplayer:
+    #stats_array = [[0 for x in xrange(2)] 0 for x in xrange(9)]
     #2manystats
     stats_pts = 0
     stats_fga = 0
@@ -207,7 +208,7 @@ class bbplayer:
         self.out_d      = out_d
         self.rebounding = rebounding
         self.ovrshoot   = (int_s + mid_s + out_s) / 3
-            
+
     def game_reset_pstats(self):
         self.stats_gms += 1
         self.stats_tot_pts += self.stats_pts
@@ -232,24 +233,31 @@ class bbplayer:
         for x in xrange(len(stats_array)):
             stats_array[x][1] += stats_array[x]
             stats_array[x] = 0
-    '''
-    def get_ppg(self):
+    ''' 
+    @property
+    def ppg(self):
         return self.stats_tot_pts/self.stats_gms
-    def get_fgp(self):
+    @property
+    def fgp(self):
         if self.stats_tot_fga > 0:
             return self.stats_tot_fgm/self.stats_tot_fga
         else: return 0
-    def get_3fp(self):
+    @property
+    def fp3(self):
         if self.stats_tot_3ga > 0:
             return self.stats_tot_3gm/self.stats_tot_3ga
         else: return 0
-    def get_rpg(self):
+    @property
+    def rpg(self):
         return self.stats_tot_reb/self.stats_gms
-    def get_apg(self):
+    @property
+    def apg(self):
         return self.stats_tot_ass/self.stats_gms
-    def get_spg(self):
+    @property
+    def spg(self):
         return self.stats_tot_stl/self.stats_gms
-    def get_bpg(self):
+    @property
+    def bpg(self):
         return self.stats_tot_blk/self.stats_gms
         
     def print_ratings(self, labels): #labels = 1 if they want headings, 0 if jsut raw stats
@@ -258,8 +266,9 @@ class bbplayer:
         print("{name:<13}|".format(name=self.name), self.height, self.weight, self.age, self.speed, self.int_s, self.mid_s, self.out_s, self.passing, self.handling, self.steal, self.block, self.int_d, self.out_d, self.rebounding)
     
     def print_pergame_boxplayer(self):
-        print("{name:<13}| {ppg:<4} | {fgp:<4} | {fp3:<4} | {reb:<4} | {ass:<4} | {stl:<4}| {blk:<4}".format(name=self.name, ppg=int(self.get_ppg()*10)/10, fgp=int(self.get_fgp()*1000)/10, fp3=int(self.get_3fp()*1000)/10,
-              reb=int(self.get_rpg()*10)/10, ass=int(self.get_apg()*10)/10, stl=int(self.get_spg()*10)/10, blk=int(self.get_bpg()*10)/10))
+        print("{name:<13}| {ppg:<4} | {fgp:<4} | {fp3:<4} | {reb:<4} | {ass:<4} | {stl:<4}| {blk:<4}".format(name=self.name, ppg=int(self.ppg*10)/10, fgp=int(self.fgp*1000)/10, fp3=int(self.fp3*1000)/10,
+              reb=int(self.rpg*10)/10, ass=int(self.apg*10)/10, stl=int(self.spg*10)/10, blk=int(self.bpg*10)/10))
+
     def print_boxplayer(self):
         print("{name:<13}|  {points:<3} | {fgm:<2}/ {fga:<2} | {gm3:<2}/ {ga3:<2} |  {rebounds:<3} |  {assists:<3} |  {steals:<3} |  {blocks:<3}".format(name=self.name, points=self.stats_pts, fgm=self.stats_fgm, 
               fga=self.stats_fga, gm3=self.stats_3gm, ga3=self.stats_3ga, rebounds=self.stats_reb, assists=self.stats_ass, steals=self.stats_stl, blocks=self.stats_blk))
@@ -296,15 +305,15 @@ class team:
         self.smallf.print_pergame_boxplayer()
         self.powerf.print_pergame_boxplayer()
         self.center.print_pergame_boxplayer()
-        tot_ppg = self.pointg.get_ppg() + self.shootg.get_ppg() + self.smallf.get_ppg() + self.powerf.get_ppg() + self.center.get_ppg()
+        tot_ppg = self.pointg.ppg + self.shootg.ppg + self.smallf.ppg + self.powerf.ppg + self.center.ppg
         tot_fgp = (self.pointg.stats_tot_fgm + self.shootg.stats_tot_fgm+ self.smallf.stats_tot_fgm + self.powerf.stats_tot_fgm +
                    self.center.stats_tot_fgm)/(self.pointg.stats_tot_fga + self.shootg.stats_tot_fga+ self.smallf.stats_tot_fga + self.powerf.stats_tot_fga + self.center.stats_tot_fga)
         tot_3fp = (self.pointg.stats_tot_3gm + self.shootg.stats_tot_3gm+ self.smallf.stats_tot_3gm + self.powerf.stats_tot_3gm + 
                    self.center.stats_tot_3gm)/(self.pointg.stats_tot_3ga + self.shootg.stats_tot_3ga+ self.smallf.stats_tot_3ga + self.powerf.stats_tot_3ga + self.center.stats_tot_3ga)
-        tot_rpg = self.pointg.get_rpg() + self.shootg.get_rpg() + self.smallf.get_rpg() + self.powerf.get_rpg() + self.center.get_rpg()
-        tot_apg = self.pointg.get_apg() + self.shootg.get_apg() + self.smallf.get_apg() + self.powerf.get_apg() + self.center.get_apg()
-        tot_spg = self.pointg.get_spg() + self.shootg.get_spg() + self.smallf.get_spg() + self.powerf.get_spg() + self.center.get_spg()
-        tot_bpg = self.pointg.get_bpg() + self.shootg.get_bpg() + self.smallf.get_bpg() + self.powerf.get_bpg() + self.center.get_bpg()
+        tot_rpg = self.pointg.rpg + self.shootg.rpg + self.smallf.rpg + self.powerf.rpg + self.center.rpg
+        tot_apg = self.pointg.apg + self.shootg.apg + self.smallf.apg + self.powerf.apg + self.center.apg
+        tot_spg = self.pointg.spg + self.shootg.spg + self.smallf.spg + self.powerf.spg + self.center.spg
+        tot_bpg = self.pointg.bpg + self.shootg.bpg + self.smallf.bpg + self.powerf.bpg + self.center.bpg
         print("-----------------------------------------------------------")
         print("TOTAL:       | {ppg:<5}| {fgp:<4} | {fp3:<4} | {reb:<4} | {ass:<4} | {stl:<4}| {blk:<4}".format(ppg=int(tot_ppg*10)/10, fgp=int(tot_fgp*1000)/10, fp3=int(tot_3fp*1000)/10, reb=int(tot_rpg*10)/10,
               ass=int(tot_apg*10)/10, stl=int(tot_spg*10)/10, blk=int(tot_bpg*10)/10))
