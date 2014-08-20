@@ -220,29 +220,22 @@ class bbplayer:
             stats_array[x][1] += stats_array[x]
             stats_array[x] = 0
     '''
-    @property
     def get_ppg(self):
         return self.stats_tot_pts/self.stats_gms
-    @property
     def get_fgp(self):
         if self.stats_tot_fga > 0:
             return self.stats_tot_fgm/self.stats_tot_fga
         else: return 0
-    @property
     def get_3fp(self):
         if self.stats_tot_3ga > 0:
             return self.stats_tot_3gm/self.stats_tot_3ga
         else: return 0
-    @property
     def get_rpg(self):
         return self.stats_tot_reb/self.stats_gms
-    @property
     def get_apg(self):
         return self.stats_tot_ass/self.stats_gms
-    @property
     def get_spg(self):
         return self.stats_tot_stl/self.stats_gms
-    @property
     def get_bpg(self):
         return self.stats_tot_blk/self.stats_gms
         
