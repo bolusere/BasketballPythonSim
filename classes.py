@@ -127,6 +127,7 @@ class team:
     def __init__(self, name, pointg, shootg, smallf, powerf, center):
         self.name = name
         self.player_array = [None] * 5
+        self.bench_array = []
         self.player_array[0] = pointg
         self.player_array[1] = shootg
         self.player_array[2] = smallf
@@ -140,6 +141,9 @@ class team:
     def size(self):
         _size = 0
         for player in self.player_array:
+            if player != None:
+                _size += 1
+        for player in self.bench_array:
             if player != None:
                 _size += 1
         return _size
@@ -159,35 +163,28 @@ class team:
     def center(self):
         return self.player_array[4]
 
-    def add_player(self, player, player_position):
-        if player_position >= 1 and player_position <= 5:
+    def add_player(self, player, player_position=None):
+        if player_position == None:
+            self.bench_array.append(player)
+        elif player_position >= 1 and player_position <= 5:
             self.player_array[player_position - 1] = player
         else:
             raise KeyError('Not a valid position')
 
     def game_reset_tstats(self):
-        self.pointg.game_reset_pstats()
-        self.shootg.game_reset_pstats()
-        self.smallf.game_reset_pstats()
-        self.powerf.game_reset_pstats()
-        self.center.game_reset_pstats()
-    
+        for player in self.player_array:
+            player.game_reset_pstats()
+
     def print_team_ratings(self):
         print(self.name)
         print("NAME:        | HT|WGT|AG|SP|IN|MD|OT|PS|HD|ST|BL|ID|OD|RB|")
-        self.pointg.print_ratings(0)
-        self.shootg.print_ratings(0)
-        self.smallf.print_ratings(0)
-        self.powerf.print_ratings(0)
-        self.center.print_ratings(0)
+        for player in self.player_array:
+            player.print_ratings(0)
     
     def print_pergame_box(self):
         print("PER GAME AVG | PPG  | FG%  | 3G%  | RPG  | APG  | SPG | BPG")
-        self.pointg.print_pergame_boxplayer()
-        self.shootg.print_pergame_boxplayer()
-        self.smallf.print_pergame_boxplayer()
-        self.powerf.print_pergame_boxplayer()
-        self.center.print_pergame_boxplayer()
+        for player in self.player_array:
+            player.print_pergame_boxplayer()
         tot_ppg = self.pointg.ppg + self.shootg.ppg + self.smallf.ppg + self.powerf.ppg + self.center.ppg
         tot_fgp = (self.pointg.stats_tot_fgm + self.shootg.stats_tot_fgm+ self.smallf.stats_tot_fgm + self.powerf.stats_tot_fgm +
                    self.center.stats_tot_fgm)/(self.pointg.stats_tot_fga + self.shootg.stats_tot_fga+ self.smallf.stats_tot_fga + self.powerf.stats_tot_fga + self.center.stats_tot_fga)
@@ -203,11 +200,8 @@ class team:
     
     def print_box(self):
         print("NAME:        |  PTS | FGM/FGA| 3GM/3GA| REB  | ASS  | STL  | BLK")
-        self.pointg.print_boxplayer()
-        self.shootg.print_boxplayer()
-        self.smallf.print_boxplayer()
-        self.powerf.print_boxplayer()
-        self.center.print_boxplayer()
+        for player in self.player_array:
+            player.print_boxplayer()
         tot_pts = self.pointg.stats_pts + self.shootg.stats_pts + self.smallf.stats_pts + self.powerf.stats_pts + self.center.stats_pts
         tot_fgm = self.pointg.stats_fgm + self.shootg.stats_fgm + self.smallf.stats_fgm + self.powerf.stats_fgm + self.center.stats_fgm
         tot_fga = self.pointg.stats_fga + self.shootg.stats_fga + self.smallf.stats_fga + self.powerf.stats_fga + self.center.stats_fga
