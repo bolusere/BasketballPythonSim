@@ -97,8 +97,8 @@ def generate_player(pref_pos):
         out_d += random.randint(0, 20) - 30
         rebounding += random.randint(5, 15)
     #choose 5(?) of these "attributes" to make a player. Some are good, some bad, some funny
-    list_attributes = ["Passer", "3pt Specialist", "Blocker", "Tall", "Short", "On-ball Defense", "Rebounder", "Fumbler", "Fatty", "Slow", "No Threes", "Dunker", "Defensive Liability", "Offensive Liability",
-                       "Mid-range Specialist", "High Ceiling", "The Wall"]
+    list_attributes = ["Passer", "Offensive Weapon", "Blocker", "Tall", "Short", "On-ball Defense", "Rebounder", "Fumbler", "Fatty", "Slow", "No Threes", "Dunker", "Defensive Liability", "Offensive Liability",
+                       "Mid-range Specialist", "The Whole Package", "The Wall", "3pt Specialist"]
     num_att = 0
     tries = 0
     gained_attributes = []
@@ -110,8 +110,10 @@ def generate_player(pref_pos):
         print(a)
         if a=="Passer":
             passing += random.randint(10, 15)
-        elif a=="3pt Specialist":
-            out_s += random.randint(8, 12)
+        elif a=="Offensive Weapon":
+            out_s += random.randint(0, 10)
+            mid_s += random.randint(10, 15)
+            int_s += random.randint(10, 15)
         elif a=="Blocker":
             block += random.randint(10, 15)
         elif a=="Tall":
@@ -146,12 +148,23 @@ def generate_player(pref_pos):
             mid_s -= random.randint(5, 10)
         elif a=="Mid-range Specialist":
             mid_s += random.randint(12, 17)
-        elif a=="High Ceiling":
-            #potential bump
-            age -= 1
+        elif a=="The Whole Package":
+            steal += random.randint(2, 4)
+            block += random.randint(2, 4)
+            int_d += random.randint(2, 4)
+            out_d += random.randint(2, 4)
+            int_s += random.randint(2, 4)
+            out_s += random.randint(2, 4)
+            mid_s += random.randint(2, 4)
+            passing += random.randint(2, 4)
         elif a=="The Wall":
             int_d += random.randint(12, 17)
             block += random.randint(6, 12)
+        elif a=="3pt Specialist":
+            out_s += random.randint(15, 20)
+            mid_s -= random.randint(5, 15)
+            int_s -= random.randint(5, 15)
+            passing -= random.randint(5, 15)
     return bbplayer("Generic", height, weight, speed, age, int_s, mid_s, out_s, passing, handling, steal, block, int_d, out_d, rebounding)
         
 class bbplayer:  
@@ -523,8 +536,8 @@ def take_shot(shooter, defender, defense, assister, prplay): #return points of s
         return 0
     if shooter.out_s * random.random() > 40 or (shooter.out_s > (shooter.int_s + shooter.mid_s) and random.random() > 0.25): #second part is where guy is clearly 3pt specialist, ie 25/50/99
         #3pt shot
-        chance = (shooter.out_s / defender.out_d) * random.random() * 70 + ass_bonus
-        if chance > 50:
+        chance = (shooter.out_s / defender.out_d) * random.random() * 70 + ass_bonus + shooter.out_s/10 #70 norm multy
+        if chance > 60:
             #made it!
             shooter.stats_pts += 3
             shooter.stats_fga += 1
@@ -537,9 +550,9 @@ def take_shot(shooter, defender, defense, assister, prplay): #return points of s
             shooter.stats_fga += 1
             shooter.stats_3ga += 1
             return 0
-    elif shooter.mid_s * random.random() > 50: #50 norm
+    elif shooter.mid_s * random.random() > 50: 
         #midrange jumper
-        chance = (shooter.mid_s / defender.out_d) * random.random() * 80 + ass_bonus
+        chance = (shooter.mid_s / defender.out_d) * random.random() * 80 + ass_bonus + shooter.mid_s/10 #80 norm multy
         if chance > 50:
             #made it!
             shooter.stats_pts += 2
@@ -552,7 +565,7 @@ def take_shot(shooter, defender, defense, assister, prplay): #return points of s
             return 0
     else:
         #inside layup/dunk/etc
-        chance = ((shooter.int_s / defender.int_d) * random.random() * 90) + ass_bonus# - random.random()*((defense.center.int_d + defense.powerf.int_d + defense.smallf.int_d*0.75)/5)
+        chance = ((shooter.int_s / defender.int_d) * random.random() * 80) + ass_bonus + shooter.int_s/10 # - random.random()*((defense.center.int_d + defense.powerf.int_d + defense.smallf.int_d*0.75)/5)
         if chance > 50:
             #made it!
             if random.random() < 0.3:
