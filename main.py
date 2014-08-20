@@ -2,6 +2,7 @@
 import random
 from scripts import *
 from classes import *
+if __name__ == "__main__":
     """
     # ------------------|  NAME  |HGT|WTLB|SPD|AGE|INS|MID|OUT|PSS|HND|STL|BLK|IND|OTD|REB| 
     StanPoint = bbplayer("Pointy", 72, 150, 90, 25, 75, 75, 75, 99, 90, 80, 30, 30, 80, 20)
