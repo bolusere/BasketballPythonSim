@@ -212,14 +212,15 @@ def generate_player(pref_pos):
 
 def intelligent_pass(who_poss, offense, defense, matches):
     sorted_matches = sorted(matches)
-    
-    if random.random()<0.3: #30% chance to pass to greatest mismatch (add in bball IQ later to have higher chance?)
+    tot_m = matches[0]+matches[1]+matches[2]+matches[3]+matches[4]
+    sel_target = random.randint(0, tot_m)
+    if sel_target<sorted_matches[4]: #30% chance to pass to greatest mismatch (add in bball IQ later to have higher chance?)
         target = sorted_matches[4]
-    elif random.random()<0.3:
+    elif random.random()<0.4:
         target = sorted_matches[3]
-    elif random.random()<0.3:
+    elif random.random()<0.4:
         target = sorted_matches[2]
-    elif random.random()<0.3:
+    elif random.random()<0.4:
         target = sorted_matches[1]
     else:
         target = sorted_matches[0]
@@ -386,10 +387,12 @@ def run_play(offense, defense, matches, prplay): #take it possession at time yo
                     who_poss = rebounder
 
 def take_shot(shooter, defender, defense, assister, prplay): #return points of shot, 0 if miss
+    
     #give assist bonus for having a good passer pass to you
     ass_bonus = 0
     if assister != shooter:
         ass_bonus = assister.passing / 20
+    
     #block?
     if random.random() * (defender.block + (defender.height - shooter.height)) > 80 or random.random() < 0.005:
         #NOT IN MY HOUSE MOFO
@@ -397,8 +400,26 @@ def take_shot(shooter, defender, defense, assister, prplay): #return points of s
         shooter.stats_fga += 1
         defender.stats_blk += 1
         return 0
-    if (shooter.out_s * random.random() > 40 and shooter.out_s > (50 + 25*random.random())) or (shooter.out_s > (shooter.int_s + shooter.mid_s) and random.random() > 0.25): #second part is where guy is clearly 3pt specialist, ie 25/50/99
-        #3pt shot
+    
+    #select shot, use tendencies
+    out_ten = 0
+    mid_ten = 0
+    int_ten = 0
+    if shooter.out_s>50: out_ten = (shooter.out_s / defender.out_d) * shooter.out_s**1.2
+    if shooter.out_s + 20 < shooter.mid_s or shooter.out_s + 15 < shooter.int_s: out_ten -= 80 #see if one stat is sig worse than other two so he never takes that shot
+    
+    if shooter.mid_s>50: mid_ten = (shooter.mid_s / (defender.out_d*0.5 + 0.5*defender.int_d)) * shooter.mid_s**1.2
+    if shooter.mid_s + 20 < shooter.out_s or shooter.mid_s + 15 < shooter.int_s: mid_ten -= 80
+    
+    if shooter.int_s>50: int_ten = (shooter.int_s / defender.int_d) * shooter.int_s**1.2
+    if shooter.int_s + 20 < shooter.out_s or shooter.int_s + 15 < shooter.mid_s: mid_ten -= 80
+    if out_ten<0: out_ten=0
+    if mid_ten<0: mid_ten=0
+    if int_ten<0: int_ten=0
+    tot_ten = out_ten + mid_ten + int_ten
+    sel_shot = random.randint(0, int(tot_ten))
+    
+    if sel_shot < out_ten: #3point shot selected
         chance = (shooter.out_s / defender.out_d) * random.random() * 70 + ass_bonus + (shooter.out_s - 75)/3 #70 norm multy
         if chance > 60:
             #made it!
@@ -413,8 +434,8 @@ def take_shot(shooter, defender, defense, assister, prplay): #return points of s
             shooter.stats_fga += 1
             shooter.stats_3ga += 1
             return 0
-    elif shooter.mid_s * random.random() > 50 and shooter.mid_s > (50 + 20*random.random()): 
-        #midrange jumper
+    
+    elif sel_shot >= out_ten and sel_shot < int_ten: #midrange jumper selected
         chance = (shooter.mid_s / (defender.out_d*0.5 + 0.5*defender.int_d)) * random.random() * 80 + ass_bonus + (shooter.mid_s - 75)/3 #80 norm multy
         if chance > 50:
             #made it!
@@ -426,8 +447,8 @@ def take_shot(shooter, defender, defense, assister, prplay): #return points of s
             if prplay==1: print(shooter.name, "bricks the midrange jumper!")        
             shooter.stats_fga += 1
             return 0
-    else:
-        #inside layup/dunk/etc
+    
+    else: #inside layup/dunk/etc
         chance = ((shooter.int_s / defender.int_d) * random.random() * 80) + ass_bonus + (shooter.int_s - 75)/3 # - random.random()*((defense.center.int_d + defense.powerf.int_d + defense.smallf.int_d*0.75)/5)
         if chance > 50:
             #made it!
