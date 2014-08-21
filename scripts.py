@@ -18,7 +18,7 @@ def detect_mismatch(offense, defense, pr):
     matches = [pg_diff, sg_diff, sf_diff, pf_diff, cn_diff]
     return matches
 
-def draft(num_players):
+def draft_generate(num_players):
     player_list = []
     names_list = ["a", "b", "c", "d", "e", "f", "g", "h", "i",
                   "j", "k", "l", "m", "n", "o", "p", "q", "r",
@@ -28,6 +28,34 @@ def draft(num_players):
         name = names_list.pop(math.floor(random.random() * len(names_list)))
         player_list.append(generate_player(position, name))
     return player_list
+
+def draft_start(player_list, num_opponents):
+    opponents_list = []
+    for i in range(num_opponents):
+        opponents_list.append(ai_opponent())
+    player_team = team.empty()
+
+    for i in range(5):
+        print("NAME:        | HT|WGT|AG|SP|IN|MD|OT|PS|HD|ST|BL|ID|OD|RB|")
+        for x in player_list:
+            x.print_ratings(0)
+        #get player selection
+        successful_selection = False
+        while True:
+            player_selection_name = input("who u want: ")
+            for player in player_list:
+                if player.name.lower() == player_selection_name.lower():
+                    player_team.add_player(player)
+                    player_list.remove(player)
+                    successful_selection = True
+                    break
+            if successful_selection: break
+            else: print("pick a real name idiot")
+        for ai in opponents_list:
+            ai.ai_team.add_player(player_list.pop(ai.select_player(player_list)), i+1)
+        input("Press Enter to continue...")
+
+    return player_team, opponents_list
 
 def find_rebounder(team): #who shall receive the rebounding blessing?
     cenreb = random.random()*team.center.rebounding*1.2

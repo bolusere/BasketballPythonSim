@@ -17,7 +17,7 @@ if __name__ == "__main__":
     StanSmal2 = bbplayer("Onlydf", 80, 200, 80, 25, 99, 99, 99, 99, 75, 85, 70, 75, 80, 75)
     StanPowe2 = bbplayer("Power2", 82, 220, 60, 25, 99, 99, 99, 99, 75, 60, 90, 85, 70, 85)
     StanCente2= bbplayer("Cente2", 84, 250, 40, 25, 99, 99, 99, 99, 50, 40, 90, 90, 50, 90)
-
+    """
     while True:
         try:
             draft_size = int(input("draft size??: "))
@@ -28,29 +28,10 @@ if __name__ == "__main__":
         except ValueError:
             print("pick a positive integer idiot")
 
-    player_list = draft(draft_size)
-    print("NAME:        | HT|WGT|AG|SP|IN|MD|OT|PS|HD|ST|BL|ID|OD|RB|")
-    for x in player_list:
-        x.print_ratings(0)
+    draft_list = draft_generate(draft_size)
+    player_team, opponents_list = draft_start(draft_list, 1)
+    player_team.random_assignment()
 
-    ai_player = ai_opponent("Generic Baddie")
-    player_team = team.empty()
-    ai_team = team.empty()
-
-    for i in range(5):
-        while True:
-            player_selection_name = input("who u want: ")
-            for player in player_list:
-                if player.name.lower() == player_selection_name.lower():
-                    player_team.add_player(player)
-                    player_list.remove(player)
-                    break
-            print("pick a real name idiot")
-        ai_team.add_player(player_list.pop(ai_player.select_player(player_list)), dumb_ai)
-        dumb_ai += 1
-        print("NAME:        | HT|WGT|AG|SP|IN|MD|OT|PS|HD|ST|BL|ID|OD|RB|")
-        for x in player_list:
-            x.print_ratings(0)
     """
     print("\n*** Average Joes' attributes: ***")
     StanPoint = generate_player(1)
@@ -68,6 +49,9 @@ if __name__ == "__main__":
 
     team_A = team("Average Joes", StanPoint, StanShoot, StanSmall, StanPower, StanCenter)
     team_B = team("The Not Bads", StanPoin2, StanShoo2, StanSmal2, StanPowe2, StanCente2)
+    """
+    team_A = player_team
+    team_B = opponents_list[0].ai_team
     playseries(team_A, team_B, 50, 0, 1)
     print("\n")
     team_A.print_team_ratings()

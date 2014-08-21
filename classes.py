@@ -2,8 +2,17 @@ import math
 import random
 
 class ai_opponent:
-    def __init__(self, name):
-        self.name = name
+    def __init__(self, name=None, ai_team=None):
+        if name == None:
+            names_list = ["bad", "badd", "baddie", "hello"]
+            self.name = random.choice(names_list)
+            names_list.remove(self.name)
+        else:
+            self.name = name
+        if ai_team == None:
+            self.ai_team = team.empty()
+        else:
+            self.ai_team = ai_team
 
     def select_player(self, player_list):
         draft_position = 0
@@ -214,3 +223,10 @@ class team:
         print("----------------------------------------------------------")
         print("TOTAL:       |  {points:<3} | {fgm:<2}/ {fga:<2} | {gm3:<2}/ {ga3:<2} |  {rebounds:<3} |  {assists:<3} |  {steals:<3} |  {blocks:<3}".format(points=tot_pts, fgm=tot_fgm, fga=tot_fga,
               gm3=tot_3gm, ga3=tot_3ga, rebounds=tot_reb, assists=tot_ass, steals=tot_stl, blocks=tot_blk))
+
+    def random_assignment(self):
+        if self.size >= 5:
+            for player in self.player_array:
+                if player is None:
+                    self.player_array[self.player_array.index(player)] = self.bench_array.pop()
+        self.name = "PLAYER TEAM"
