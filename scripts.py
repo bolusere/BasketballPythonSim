@@ -221,7 +221,7 @@ def generate_player(pref_pos, name="Generic"):
 
 def intelligent_pass(who_poss, offense, defense, matches):
     sorted_matches = sorted(matches)
-    weighted = 5
+    weighted = 2
     tot_m = matches[0]**weighted + matches[1]**weighted + matches[2]**weighted + matches[3]**weighted + matches[4]**weighted
     sel_target = random.randint(0, int(tot_m))
     if sel_target < sorted_matches[4]**weighted: #fix this so its more proportional
@@ -349,7 +349,7 @@ def run_play(offense, defense, matches, prplay): #take it possession at time yo
     assister = who_poss
     while off_poss == 1:
         mismatch = calc_mismatch(who_poss, who_def, 0)
-        if random.randint(passes,6) < 5 or (passes==0 and random.random()>0.95):
+        if random.randint(passes,6) < 5 or (passes==0 and random.random()<0.95):
             #pass
             passes+=1
             ifsteal = pot_steal(who_poss, who_def)
