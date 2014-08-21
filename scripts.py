@@ -150,7 +150,7 @@ def generate_player(pref_pos, name="Generic"):
         rebounding += random.randint(5, 15)
     #choose 5(?) of these "attributes" to make a player. Some are good, some bad, some funny
     list_attributes = ["Passer", "Offensive Weapon", "Blocker", "Tall", "Short", "On-ball Defense", "Rebounder", "Fumbler", "Fatty", "Slow", "No Threes", "Dunker", "Defensive Liability", "Offensive Liability",
-                       "Mid-range Specialist", "The Whole Package", "The Wall", "3pt Specialist"]
+                       "Mid-range Specialist", "The Whole Package", "The Wall", "3pt Specialist", "Two-way inside", "Two-way outside"]
     num_att = 0
     tries = 0
     gained_attributes = []
@@ -217,14 +217,21 @@ def generate_player(pref_pos, name="Generic"):
             mid_s -= random.randint(5, 15)
             int_s -= random.randint(5, 15)
             passing -= random.randint(5, 15)
+        elif a=="Two-way inside":
+            int_s += random.randint(8, 12)
+            int_d += random.randint(8, 12)
+        elif a=="Two-way outside":
+            out_s += random.randint(8, 12)
+            out_d += random.randint(8, 12)
+            
     return bbplayer(name, height, weight, speed, age, int_s, mid_s, out_s, passing, handling, steal, block, int_d, out_d, rebounding)
 
 def intelligent_pass(who_poss, offense, defense, matches):
     sorted_matches = sorted(matches)
-    weighted = 2
+    weighted = 3
     tot_m = matches[0]**weighted + matches[1]**weighted + matches[2]**weighted + matches[3]**weighted + matches[4]**weighted
     sel_target = random.randint(0, int(tot_m))
-    if sel_target < sorted_matches[4]**weighted: #fix this so its more proportional
+    if sel_target < sorted_matches[4]**weighted:
         target = sorted_matches[4]
     elif sel_target < (sorted_matches[4]**weighted + sorted_matches[3]**weighted):
         target = sorted_matches[3]
@@ -300,7 +307,7 @@ def playgame(home, away, prplay, prbox): #home team, away team, print play-by-pl
             poss_home = 0
             gametime += 24 * random.random() / hspeed
         elif poss_away:
-            ascore += run_play(away, home, matches_h, prplay)
+            ascore += run_play(away, home, matches_a, prplay)
             poss_away = 0
             poss_home = 1
             gametime += 24 * random.random() / aspeed
@@ -348,8 +355,8 @@ def run_play(offense, defense, matches, prplay): #take it possession at time yo
     who_def  = defense.pointg
     assister = who_poss
     while off_poss == 1:
-        mismatch = calc_mismatch(who_poss, who_def, 0)
-        if random.randint(passes,6) < 5 or (passes==0 and random.random()<0.95):
+        #mismatch = calc_mismatch(who_poss, who_def, 0)
+        if ((random.randint(passes,6) < 5) or (passes==0 and random.random()<0.97)) or (who_poss.passing*3 - who_poss.out_s - who_poss.mid_s - who_poss.int_s > 80 and random.random() < 0.9):
             #pass
             passes+=1
             ifsteal = pot_steal(who_poss, who_def)
@@ -379,7 +386,7 @@ def run_play(offense, defense, matches, prplay): #take it possession at time yo
                     if prplay==1: print(who_poss.name, "made a", points, "pt shot")
                     return points
                 else:
-                    assister.stats_ass += 1
+                    if assister.passing*random.random() + 50 > 75: assister.stats_ass += 1
                     if prplay==1: print(who_poss.name, "made a", points, "pt shot with an assist from", assister.name)
                     return points
             else:
@@ -395,6 +402,7 @@ def run_play(offense, defense, matches, prplay): #take it possession at time yo
                     rebounder = find_rebounder(offense)
                     if prplay==1: print(rebounder.name,"snatches the offensive rebound!")
                     who_poss = rebounder
+                    passes = 2
 
 def take_shot(shooter, defender, defense, assister, prplay): #return points of shot, 0 if miss
     
@@ -416,15 +424,15 @@ def take_shot(shooter, defender, defense, assister, prplay): #return points of s
     mid_ten = 0
     int_ten = 0
     if shooter.out_s>50: out_ten = (shooter.out_s / defender.out_d) * shooter.out_s**1.2
-    if shooter.out_s + 20 < shooter.mid_s or shooter.out_s + 20 < shooter.int_s: out_ten -= 150 #see if one stat is sig worse than other two so he never takes that shot
+    if shooter.out_s + 20 < shooter.mid_s or shooter.out_s + 20 < shooter.int_s: out_ten -= 200 #see if one stat is sig worse than other two so he never takes that shot
     out_ten += 3*(shooter.out_s - 75)
     
     if shooter.mid_s>50: mid_ten = (shooter.mid_s / (defender.out_d*0.5 + 0.5*defender.int_d)) * shooter.mid_s**1.2
-    if shooter.mid_s + 20 < shooter.out_s or shooter.mid_s + 20 < shooter.int_s: mid_ten -= 150
+    if shooter.mid_s + 20 < shooter.out_s or shooter.mid_s + 20 < shooter.int_s: mid_ten -= 200
     mid_ten += 3*(shooter.mid_s - 75)
     
     if shooter.int_s>50: int_ten = (shooter.int_s / defender.int_d) * shooter.int_s**1.2
-    if shooter.int_s + 20 < shooter.out_s or shooter.int_s + 20 < shooter.mid_s: int_ten -= 150
+    if shooter.int_s + 20 < shooter.out_s or shooter.int_s + 20 < shooter.mid_s: int_ten -= 200
     int_ten += 3*(shooter.mid_s - 75)
     
     if out_ten<0: out_ten=0
@@ -433,7 +441,7 @@ def take_shot(shooter, defender, defense, assister, prplay): #return points of s
     tot_ten = out_ten + mid_ten + int_ten
     sel_shot = random.randint(0, int(tot_ten))
     
-    if sel_shot < out_ten: #3point shot selected
+    if sel_shot < out_ten and out_ten!=0: #3point shot selected
         chance = (shooter.out_s / defender.out_d) * random.random() * 70 + ass_bonus + (shooter.out_s - 75)/3 #70 norm multy
         if chance > 60:
             #made it!
@@ -449,7 +457,7 @@ def take_shot(shooter, defender, defense, assister, prplay): #return points of s
             shooter.stats_3ga += 1
             return 0
     
-    elif sel_shot >= out_ten and sel_shot < int_ten: #midrange jumper selected
+    elif sel_shot >= out_ten and sel_shot < int_ten and mid_ten!=0: #midrange jumper selected
         chance = (shooter.mid_s / (defender.out_d*0.5 + 0.5*defender.int_d)) * random.random() * 80 + ass_bonus + (shooter.mid_s - 75)/3 #80 norm multy
         if chance > 50:
             #made it!
