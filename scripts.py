@@ -20,12 +20,15 @@ def detect_mismatch(offense, defense, pr):
 
 def draft_generate(num_players):
     player_list = []
-    names_list = ["a", "b", "c", "d", "e", "f", "g", "h", "i",
+    first_names_list = ["a", "b", "c", "d", "e", "f", "g", "h", "i",
                   "j", "k", "l", "m", "n", "o", "p", "q", "r",
-                  "s", "t", "u", "v", "w", "x", "y", "z"]
-    for x in range(num_players):
+                  "s", "t", "u", "v", "w", "x", "y", "z", "air"]
+    last_names_list = ["james", "bryant", "iverson", "bird", "stuyvesant",
+                       "vanderbilt", "rockefeller", "notgooderson",
+                       "bud"]
+    while len(set(player_list)) < num_players:
         position = math.ceil(random.random() * 5)
-        name = names_list.pop(math.floor(random.random() * len(names_list)))
+        name = random.choice(first_names_list) + " " + random.choice(last_names_list)
         player_list.append(generate_player(position, name))
     return player_list
 
