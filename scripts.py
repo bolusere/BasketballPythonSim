@@ -30,7 +30,7 @@ def draft_generate(num_players):
         position = math.ceil(random.random() * 5)
         name = random.choice(first_names_list) + " " + random.choice(last_names_list)
         player_list.append(generate_player(position, name))
-    return player_list
+    return set(player_list)
 
 def draft_start(player_list, num_opponents):
     opponents_list = []
