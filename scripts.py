@@ -20,12 +20,15 @@ def detect_mismatch(offense, defense, pr):
 
 def draft_generate(num_players):
     player_list = []
-    first_names_list = ["a", "b", "c", "d", "e", "f", "g", "h", "i",
-                        "j", "k", "l", "m", "n", "o", "p", "q", "r",
-                        "s", "t", "u", "v", "w", "x", "y", "z", "air"]
-    last_names_list = ["james", "bryant", "iverson", "bird", "stuyvesant",
-                       "vanderbilt", "rockefeller", "notgooderson",
-                       "bud"]
+    first_names_list = ["A.", "B.", "C.", "D.", "E.", "F.", "G.", "H.", "I.",
+                  "J.", "K.", "L.", "M.", "N.", "O.", "P.", "Q.", "R.",
+                  "S.", "T.", "U.", "V.", "W.", "X.", "Y.", "Z."]
+    last_names_list = ["James", "Bryant", "Iverson", "Bird", "Baddie",
+                       "Vanderbilt", "Notgood", "DaBest", "McGrady",
+                       "Bud", "Swag", "Jam", "Rockafella", "Snipes", "Durant",
+                       "Jordan", "Dogg", "Carter", "Wayne", "Tang", "Jones",
+                       "Jesus", "Hooplife", "Buckets", "Curry", "Splash",
+                       "Dunkins", "Jumpson"]
     player_name_set = set()
     if num_players > len(first_names_list) * len(last_names_list):
         raise KeyError('Don\'t have enough names')
@@ -43,9 +46,14 @@ def draft_start(player_list, num_opponents):
     player_team = team.empty()
 
     for i in range(5):
+        count = 0
         print("NAME:        | HT|WGT|AG|SP|IN|MD|OT|PS|HD|ST|BL|ID|OD|RB|")
         for x in player_list:
+            count+=1
             x.print_ratings(0)
+            if count == 10:
+                print("NAME:        | HT|WGT|AG|SP|IN|MD|OT|PS|HD|ST|BL|ID|OD|RB|")
+                count = 0
         #get player selection
         successful_selection = False
         while True:
