@@ -44,7 +44,8 @@ def draft_start(player_list, num_opponents):
     for i in range(num_opponents):
         opponents_list.append(ai_opponent())
     player_team = team.empty()
-
+    draft_pick = 1
+    direction = 1
     for i in range(5):
         count = 0
         print("NAME:        | HT|WGT|AG|SP|IN|MD|OT|PS|HD|ST|BL|ID|OD|RB|")
@@ -54,20 +55,30 @@ def draft_start(player_list, num_opponents):
             if count == 10:
                 print("NAME:        | HT|WGT|AG|SP|IN|MD|OT|PS|HD|ST|BL|ID|OD|RB|")
                 count = 0
-        #get player selection
-        successful_selection = False
-        while True:
-            player_selection_name = input("who u want: ")
-            for player in player_list:
-                if player.name.lower() == player_selection_name.lower():
-                    player_team.add_player(player)
-                    player_list.remove(player)
-                    successful_selection = True
-                    break
-            if successful_selection: break
-            else: print("pick a real name idiot")
-        for ai in opponents_list:
-            ai.ai_team.add_player(player_list.pop(ai.select_player(player_list)), i+1)
+        for k in range(num_opponents + 1):
+            if draft_pick == 1:
+                #get player selection
+                successful_selection = False
+                while True:
+                    player_selection_name = input("who u want: ")
+                    for player in player_list:
+                        if player.name.lower() == player_selection_name.lower():
+                            player_team.add_player(player)
+                            player_list.remove(player)
+                            successful_selection = True
+                            draft_pick += direction
+                            break
+                    if successful_selection: break
+                    else: print("pick a real name idiot")
+            elif draft_pick > 1 and draft_pick <= num_opponents + 1:
+                opponents_choice = opponents_list[draft_pick - 2].select_player(player_list)
+                opponents_list[draft_pick - 2].ai_team.add_player(player_list.pop(opponents_choice), i+1)
+                draft_pick += direction
+        direction = -direction
+        if draft_pick == 0:
+            draft_pick = 1
+        elif draft_pick == num_opponents + 2:
+            draft_pick = num_opponents + 1
         input("Press Enter to continue...")
 
     return player_team, opponents_list
