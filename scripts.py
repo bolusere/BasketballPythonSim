@@ -107,11 +107,25 @@ def find_rebounder(team): #who shall receive the rebounding blessing?
         team.pointg.stats_reb += 1
         return team.pointg
 
+def generate_league(league_size):
+    league = []
+    team_prefixes = ["Mc", "Un", "Not", "Big", "Tiny", "Giant", "Red", "Blue",
+                     "Neon", "Swaggish", "White", "Black", "Last", "Best", "Worst"]
+    team_suffixes = ["Armadillos", "Lumberjacks", "Killas", "Dicks", "Diamonds",
+                     "Senators", "Warriors", "Heat", "Bulls", "Tech Support",
+                     "Ballers", "Rioters", "Mofos", "Nazis", "Klansmen"]
+    team_names = set()
+    while len(team_names) < league_size:
+        team_names.add(random.choice(team_prefixes) + " " + random.choice(team_suffixes))
+    for name in team_names:
+        league.append(generate_team(name, 1))
+    return league
+    
 #player needs
 #GENERAL: height-weight-speed-age
 #OFFENSE: inside-midrange-outside-passing-handling
 #DEFENSE: steal-block-intd-outd-rebounding
-def generate_player(pref_pos, name="Generic"):
+def generate_player(pref_pos, pr, name="Generic"):
     #default values
     height     = 78 #6'6"
     weight     = 180
@@ -128,7 +142,7 @@ def generate_player(pref_pos, name="Generic"):
     out_d      = 75
     rebounding = 75
     if pref_pos==1: #point guard
-        print("\nPOINT GUARD")
+        if pr==1: print("\nPOINT GUARD")
         height -= random.randint(3, 6)
         weight -= random.randint(0, 30)
         speed += random.randint(5, 10)
@@ -143,7 +157,7 @@ def generate_player(pref_pos, name="Generic"):
         out_d += random.randint(0, 10) - 5
         rebounding -= random.randint(10, 30)
     elif pref_pos==2: #shooting guard
-        print("\nSHOOTING GUARD")
+        if pr==1: print("\nSHOOTING GUARD")
         height += random.randint(0, 4) - 3
         weight += random.randint(0, 30) - 15
         speed += random.randint(0, 6)
@@ -158,7 +172,7 @@ def generate_player(pref_pos, name="Generic"):
         out_d += random.randint(0, 10) - 5
         rebounding -= random.randint(5, 15)
     elif pref_pos==3: #small forward
-        print("\nSMALL FORWARD")
+        if pr==1: print("\nSMALL FORWARD")
         height += random.randint(0, 6) - 2
         weight += random.randint(0, 40) - 10
         speed += random.randint(0, 16) - 8
@@ -173,7 +187,7 @@ def generate_player(pref_pos, name="Generic"):
         out_d += random.randint(0, 15) - 5
         rebounding += random.randint(0, 15) - 5
     elif pref_pos==4: #power forward
-        print("\nPOWER FORWARD")
+        if pr==1: print("\nPOWER FORWARD")
         height += random.randint(1, 7)
         weight += random.randint(20, 60)
         speed += random.randint(0, 15) - 15
@@ -188,7 +202,7 @@ def generate_player(pref_pos, name="Generic"):
         out_d += random.randint(0, 10) - 8
         rebounding += random.randint(0, 20) - 5
     elif pref_pos==5: #center
-        print("\nCENTER")
+        if pr==1: print("\nCENTER")
         height += random.randint(2, 12)
         weight += random.randint(40, 80)
         speed += random.randint(0, 20) - 30
@@ -213,7 +227,7 @@ def generate_player(pref_pos, name="Generic"):
         gained_attributes.append(list_attributes[att])
         num_att+=1
     for a in gained_attributes:
-        print(a)
+        if pr==1: print(a)
         if a=="Passer":
             passing += random.randint(10, 15)
         elif a=="Offensive Weapon":
@@ -280,9 +294,16 @@ def generate_player(pref_pos, name="Generic"):
             
     return bbplayer(name, height, weight, speed, age, int_s, mid_s, out_s, passing, handling, steal, block, int_d, out_d, rebounding)
 
+def generate_team(name, pr):
+    gen_team = team(name, generate_player(1, 0), generate_player(2, 0), generate_player(3, 0), generate_player(4, 0), generate_player(5, 0))
+    if pr==1:
+        print("\n")
+        gen_team.print_team_ratings()
+    return gen_team
+    
 def intelligent_pass(who_poss, offense, defense, matches):
     sorted_matches = sorted(matches)
-    weighted = 3
+    weighted = 2
     tot_m = matches[0]**weighted + matches[1]**weighted + matches[2]**weighted + matches[3]**weighted + matches[4]**weighted
     sel_target = random.randint(0, int(tot_m))
     if sel_target < sorted_matches[4]**weighted:
@@ -307,6 +328,24 @@ def intelligent_pass(who_poss, offense, defense, matches):
     elif target == matches[4]: #cn target of pass
         return offense.center
 
+def playseason(teams_arr):
+    itr = 0
+    while itr < len(teams_arr):
+        ttr = itr + 1
+        while ttr < len(teams_arr):
+            playgame(teams_arr[itr], teams_arr[ttr], 0, 0).wins += 1
+            playgame(teams_arr[ttr], teams_arr[itr], 0, 0).wins += 1
+            ttr += 1
+            #print("ttr:", ttr)
+        itr += 1
+        #print("itr:", itr)
+    
+    print("\n")
+    for t in teams_arr:
+        print(t.name ,"-", t.wins, "wins out of", t.pointg.stats_gms, "games")
+        t.print_pergame_box()
+        print("\n")
+        
 def playseries(team1, team2, numgames, prbox, prend):
     wins1 = 0
     wins2 = 0
@@ -352,8 +391,21 @@ def playgame(home, away, prplay, prbox): #home team, away team, print play-by-pl
     hspeed = (home.pointg.speed + home.shootg.speed + home.smallf.speed) / 300
     aspeed = (away.pointg.speed + away.shootg.speed + away.smallf.speed) / 300
     playing = True
+    
     matches_h = detect_mismatch(home, away, 0)
+    home.pointg.stats_tot_msm += matches_h[0]
+    home.shootg.stats_tot_msm += matches_h[1]
+    home.smallf.stats_tot_msm += matches_h[2]
+    home.powerf.stats_tot_msm += matches_h[3]
+    home.center.stats_tot_msm += matches_h[4]
+    
     matches_a = detect_mismatch(away, home, 0)
+    away.pointg.stats_tot_msm += matches_a[0]
+    away.shootg.stats_tot_msm += matches_a[1]
+    away.smallf.stats_tot_msm += matches_a[2]
+    away.powerf.stats_tot_msm += matches_a[3]
+    away.center.stats_tot_msm += matches_a[4]
+    
     while playing: #40min games
         if poss_home:
             hscore += run_play(home, away, matches_h, prplay)
@@ -410,7 +462,7 @@ def run_play(offense, defense, matches, prplay): #take it possession at time yo
     assister = who_poss
     while off_poss == 1:
         #mismatch = calc_mismatch(who_poss, who_def, 0)
-        if ((random.randint(passes,6) < 5) or (passes==0 and random.random()<0.97)) or (who_poss.passing*3 - who_poss.out_s - who_poss.mid_s - who_poss.int_s > 80 and random.random() < 0.9):
+        if ((random.randint(0,6) + passes < 5) or (passes==0 and random.random()<0.97)) or (who_poss.passing*3 - who_poss.out_s - who_poss.mid_s - who_poss.int_s > 80 and random.random() < 0.9):
             #pass
             passes+=1
             ifsteal = pot_steal(who_poss, who_def)
@@ -497,7 +549,7 @@ def take_shot(shooter, defender, defense, assister, prplay): #return points of s
     
     if sel_shot < out_ten and out_ten!=0: #3point shot selected
         chance = (shooter.out_s / defender.out_d) * random.random() * 70 + ass_bonus + (shooter.out_s - 75)/3 #70 norm multy
-        if chance > 60:
+        if chance > 70:
             #made it!
             shooter.stats_pts += 3
             shooter.stats_fga += 1

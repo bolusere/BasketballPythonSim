@@ -49,6 +49,7 @@ class bbplayer:
     stats_tot_reb = 0
     stats_tot_stl = 0
     stats_tot_blk = 0
+    stats_tot_msm = 0
     
     def __init__(self, name, height, weight, speed, age, int_s, mid_s, out_s, passing, handling, steal, block, int_d, out_d, rebounding):
         self.name       = name
@@ -125,8 +126,8 @@ class bbplayer:
         print("{name:<13}|".format(name=self.name), self.height, self.weight, self.age, self.speed, self.int_s, self.mid_s, self.out_s, self.passing, self.handling, self.steal, self.block, self.int_d, self.out_d, self.rebounding)
     
     def print_pergame_boxplayer(self):
-        print("{name:<13}| {ppg:<4} | {fgp:<4} | {fp3:<4} | {reb:<4} | {ass:<4} | {stl:<4}| {blk:<4}| {fga:<5} | {ga3:<5}".format(name=self.name, ppg=int(self.ppg*10)/10, fgp=int(self.fgp*1000)/10, fp3=int(self.fp3*1000)/10,
-              reb=int(self.rpg*10)/10, ass=int(self.apg*10)/10, stl=int(self.spg*10)/10, blk=int(self.bpg*10)/10, fga=self.stats_tot_fga/self.stats_gms, ga3=self.stats_tot_3ga/self.stats_gms))
+        print("{name:<13}| {ppg:<4} | {fgp:<4} | {fp3:<4} | {reb:<4} | {ass:<4} | {stl:<4}| {blk:<4}|  {fga:<2} |  {ga3:<2} | {msm:<3}".format(name=self.name, ppg=int(self.ppg*10)/10, fgp=int(self.fgp*1000)/10, fp3=int(self.fp3*999)/10,
+              reb=int(self.rpg*10)/10, ass=int(self.apg*10)/10, stl=int(self.spg*10)/10, blk=int(self.bpg*10)/10, fga=int(self.stats_tot_fga/self.stats_gms), ga3=int(self.stats_tot_3ga/self.stats_gms), msm=int(self.stats_tot_msm/self.stats_gms)))
 
     def print_boxplayer(self):
         print("{name:<13}|  {points:<3} | {fgm:<2}/ {fga:<2} | {gm3:<2}/ {ga3:<2} |  {rebounds:<3} |  {assists:<3} |  {steals:<3} |  {blocks:<3}".format(name=self.name, points=self.stats_pts, fgm=self.stats_fgm, 
@@ -142,6 +143,8 @@ class team:
         self.player_array[2] = smallf
         self.player_array[3] = powerf
         self.player_array[4] = center
+        self.wins = 0
+        self.losses = 0
 
     @classmethod
     def empty(cls):
@@ -191,7 +194,7 @@ class team:
             player.print_ratings(0)
     
     def print_pergame_box(self):
-        print("PER GAME AVG | PPG  | FG%  | 3G%  | RPG  | APG  | SPG | BPG | FGA   | 3GA")
+        print("PER GAME AVG | PPG  | FG%  | 3G%  | RPG  | APG  | SPG | BPG | FGA | 3GA | MSM")
         for player in self.player_array:
             player.print_pergame_boxplayer()
         tot_ppg = self.pointg.ppg + self.shootg.ppg + self.smallf.ppg + self.powerf.ppg + self.center.ppg
