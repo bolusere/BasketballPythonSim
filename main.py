@@ -32,27 +32,27 @@ if __name__ == "__main__":
     player_team, opponents_list = draft_start(draft_list, 1)
     player_team.random_assignment()
 
-    
+
     print("\n*** Average Joes' attributes: ***")
-    StanPoint = generate_player(1)
-    StanShoot = generate_player(2)
-    StanSmall = generate_player(3)
-    StanPower = generate_player(4)
-    StanCenter= generate_player(5)
+    StanPoint = generate_player(1, 0)
+    StanShoot = generate_player(2, 0)
+    StanSmall = generate_player(3, 0)
+    StanPower = generate_player(4, 0)
+    StanCenter= generate_player(5, 0)
     
     print("\n*** The Not Bads' attributes: ***")
-    StanPoin2 = generate_player(1)
-    StanShoo2 = generate_player(2)
-    StanSmal2 = generate_player(3)
-    StanPowe2 = generate_player(4)
-    StanCente2= generate_player(5)
+    StanPoin2 = generate_player(1, 0)
+    StanShoo2 = generate_player(2, 0)
+    StanSmal2 = generate_player(3, 0)
+    StanPowe2 = generate_player(4, 0)
+    StanCente2= generate_player(5, 0)
 
     team_A = team("Average Joes", StanPoint, StanShoot, StanSmall, StanPower, StanCenter)
     team_B = team("The Not Bads", StanPoin2, StanShoo2, StanSmal2, StanPowe2, StanCente2)
     
-    team_A = player_team
-    team_B = opponents_list[0].ai_team
-    playseries(team_A, team_B, 50, 0, 1)
+    #team_A = player_team
+    #team_B = opponents_list[0].ai_team
+    playgame(team_A, team_B, 1, 1)
     print("\n")
     #team_A.print_team_ratings()
     #print("\n")
@@ -62,8 +62,8 @@ if __name__ == "__main__":
     detect_mismatch(team_A, team_B, 1)
     print("\nBads Mismatches:")
     detect_mismatch(team_B, team_A, 1)
+
     """
-    
     #gonna play season fool
     while True:
         try:

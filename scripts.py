@@ -281,7 +281,7 @@ def generate_player(pref_pos, pr, name="Generic"):
             int_d += random.randint(12, 17)
             block += random.randint(6, 12)
         elif a=="3pt Specialist":
-            out_s += random.randint(15, 20)
+            out_s += random.randint(12, 17)
             mid_s -= random.randint(5, 15)
             int_s -= random.randint(5, 15)
             passing -= random.randint(5, 15)
@@ -549,7 +549,7 @@ def take_shot(shooter, defender, defense, assister, prplay): #return points of s
     
     if sel_shot < out_ten and out_ten!=0: #3point shot selected
         chance = (shooter.out_s / defender.out_d) * random.random() * 70 + ass_bonus + (shooter.out_s - 75)/3 #70 norm multy
-        if chance > 70:
+        if chance > 60:
             #made it!
             shooter.stats_pts += 3
             shooter.stats_fga += 1
