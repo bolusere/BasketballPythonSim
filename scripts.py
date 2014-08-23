@@ -393,18 +393,11 @@ def playgame(home, away, prplay, prbox): #home team, away team, print play-by-pl
     playing = True
     
     matches_h = detect_mismatch(home, away, 0)
-    home.pointg.stats_tot_msm += matches_h[0]
-    home.shootg.stats_tot_msm += matches_h[1]
-    home.smallf.stats_tot_msm += matches_h[2]
-    home.powerf.stats_tot_msm += matches_h[3]
-    home.center.stats_tot_msm += matches_h[4]
-    
+    for i in range(5):
+        home.player_array[i].stats_tot_msm += matches_h[i]
     matches_a = detect_mismatch(away, home, 0)
-    away.pointg.stats_tot_msm += matches_a[0]
-    away.shootg.stats_tot_msm += matches_a[1]
-    away.smallf.stats_tot_msm += matches_a[2]
-    away.powerf.stats_tot_msm += matches_a[3]
-    away.center.stats_tot_msm += matches_a[4]
+    for i in range(5):
+        away.player_array[i].stats_tot_msm += matches_a[i]
     
     while playing: #40min games
         if poss_home:
