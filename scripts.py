@@ -29,11 +29,8 @@ def draft_generate(num_players):
                        "Jordan", "Dogg", "Carter", "Wayne", "Tang", "Jones",
                        "Jesus", "Hooplife", "Buckets", "Curry", "Splash",
                        "Dunkins", "Jumpson"]
-    player_name_set = set()
-    if num_players > len(first_names_list) * len(last_names_list):
-        raise KeyError('Don\'t have enough names')
-    while len(player_name_set) < num_players:
-        player_name_set.add(random.choice(first_names_list) + " " + random.choice(last_names_list))
+    player_name_set = generate_name_set(num_players, first_names_list, last_names_list)
+
     for name in player_name_set:
         position = math.ceil(random.random() * 5)
         player_list.append(generate_player(position, name))
@@ -114,13 +111,25 @@ def generate_league(league_size):
     team_suffixes = ["Armadillos", "Lumberjacks", "Killas", "Dicks", "Diamonds",
                      "Senators", "Warriors", "Heat", "Bulls", "Tech Support",
                      "Ballers", "Rioters", "Mofos", "Nazis", "Klansmen"]
-    team_names = set()
-    while len(team_names) < league_size:
-        team_names.add(random.choice(team_prefixes) + " " + random.choice(team_suffixes))
+    team_names = generate_name_set(league_size, team_prefixes, team_suffixes)
     for name in team_names:
         league.append(generate_team(name, 1))
     return league
-    
+
+def generate_name_set(size, first_names_list, last_names_list=None):
+    player_name_set = set()
+    if last_names_list is not None:
+        if size > len(first_names_list) * len(last_names_list):
+            raise KeyError('Don\'t have enough names')
+        while len(player_name_set) < size:
+            player_name_set.add(random.choice(first_names_list) + " " + random.choice(last_names_list))
+    else:
+        if size > len(first_names_list):
+            raise KeyError('Don\'t have enough names')
+        while len(player_name_set) < size:
+            player_name_set.add(random.choice(first_names_list))
+    return player_name_set
+
 #player needs
 #GENERAL: height-weight-speed-age
 #OFFENSE: inside-midrange-outside-passing-handling
