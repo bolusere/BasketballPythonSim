@@ -17,7 +17,7 @@ if __name__ == "__main__":
     StanSmal2 = bbplayer("Onlydf", 80, 200, 80, 25, 99, 99, 99, 99, 75, 85, 70, 75, 80, 75)
     StanPowe2 = bbplayer("Power2", 82, 220, 60, 25, 99, 99, 99, 99, 75, 60, 90, 85, 70, 85)
     StanCente2= bbplayer("Cente2", 84, 250, 40, 25, 99, 99, 99, 99, 50, 40, 90, 90, 50, 90)
-    
+    """
     while True:
         try:
             draft_size = int(input("draft size??: "))
@@ -32,7 +32,7 @@ if __name__ == "__main__":
     player_team, opponents_list = draft_start(draft_list, 1)
     player_team.random_assignment()
 
-
+    """
     print("\n*** Average Joes' attributes: ***")
     StanPoint = generate_player(1, 0)
     StanShoot = generate_player(2, 0)
@@ -47,17 +47,17 @@ if __name__ == "__main__":
     StanPowe2 = generate_player(4, 0)
     StanCente2= generate_player(5, 0)
 
+
     team_A = team("Average Joes", StanPoint, StanShoot, StanSmall, StanPower, StanCenter)
     team_B = team("The Not Bads", StanPoin2, StanShoo2, StanSmal2, StanPowe2, StanCente2)
-    
-    #team_A = player_team
-    #team_B = opponents_list[0].ai_team
-    playgame(team_A, team_B, 1, 1)
+    """
+    team_A = player_team
+    team_B = opponents_list[0].ai_team
+    playseries(team_A, team_B, 7, 0, 1)
     print("\n")
     #team_A.print_team_ratings()
     #print("\n")
     #team_B.print_team_ratings()
-    #generate_player(5)
     print("\nJoes Mismatches:")
     detect_mismatch(team_A, team_B, 1)
     print("\nBads Mismatches:")
@@ -77,3 +77,4 @@ if __name__ == "__main__":
             
     league = generate_league(league_size)
     playseason(league)
+    """

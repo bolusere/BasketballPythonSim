@@ -36,7 +36,7 @@ def draft_generate(num_players):
         player_name_set.add(random.choice(first_names_list) + " " + random.choice(last_names_list))
     for name in player_name_set:
         position = math.ceil(random.random() * 5)
-        player_list.append(generate_player(position, name))
+        player_list.append(generate_player(position, 0, name))
     return player_list
 
 def draft_start(player_list, num_opponents):
@@ -253,6 +253,7 @@ def generate_player(pref_pos, pr, name="Generic"):
             weight += random.randint(50, 100)
         elif a=="Slow":
             speed -= random.randint(20, 40)
+            if speed<0: speed=0
         elif a=="No Threes":
             out_s -= random.randint(20, 30)
         elif a=="Dunker":
