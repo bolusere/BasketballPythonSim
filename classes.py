@@ -95,6 +95,9 @@ class bbplayer:
             x[0] = 0
     ''' 
     @property
+    def overall(self):
+        return int(self.speed**0.5 + self.int_s**1.3 + self.mid_s**1.3 + self.out_s**1.3 + self.passing + self.handling + self.steal**1.1 + self.block**1.1 + self.int_d**1.2 + self.out_d**1.2 + self.rebounding**1.2)
+    @property
     def ppg(self):
         return self.stats_tot_pts/self.stats_gms
     @property
@@ -123,7 +126,7 @@ class bbplayer:
     def print_ratings(self, labels): #labels = 1 if they want headings, 0 if jsut raw stats
         if labels==1:
             print("NAME:        | HT|WGT|AG|SP|IN|MD|OT|PS|HD|ST|BL|ID|OD|RB|")
-        print("{name:<13}|".format(name=self.name), self.height, self.weight, self.age, self.speed, self.int_s, self.mid_s, self.out_s, self.passing, self.handling, self.steal, self.block, self.int_d, self.out_d, self.rebounding)
+        print("{name:<13}|".format(name=self.name), self.height, self.weight, self.age, self.speed, self.int_s, self.mid_s, self.out_s, self.passing, self.handling, self.steal, self.block, self.int_d, self.out_d, self.rebounding, self.overall)
     
     def print_pergame_boxplayer(self):
         print("{name:<13}| {ppg:<4} | {fgp:<4} | {fp3:<4} | {reb:<4} | {ass:<4} | {stl:<4}| {blk:<4}|  {fga:<2} |  {ga3:<2} | {msm:<3}".format(name=self.name, ppg=int(self.ppg*10)/10, fgp=int(self.fgp*1000)/10, fp3=int(self.fp3*999)/10,
