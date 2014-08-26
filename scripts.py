@@ -46,7 +46,7 @@ def draft_print(player_list):
             print("NAME:        | HT|WGT|AG|SP|IN|MD|OT|PS|HD|ST|BL|ID|OD|RB|")
             count = 0
 
-def draft_start(player_list, num_opponents):
+def draft_start(player_list, num_opponents, player_pick_num):
     opponents_list = []
     for i in range(num_opponents):
         opponents_list.append(ai_opponent())
@@ -350,6 +350,22 @@ def intelligent_pass(who_poss, offense, defense, matches):
     elif target == matches[4]: #cn target of pass
         return offense.center
 
+def playoffs(teams_arr):
+    #round1
+    print("\nROUND OF 8:")
+    winner18 = playseries(teams_arr[0], teams_arr[7], 7, 0, 1)
+    winner27 = playseries(teams_arr[1], teams_arr[6], 7, 0, 1)
+    winner36 = playseries(teams_arr[2], teams_arr[5], 7, 0, 1)
+    winner45 = playseries(teams_arr[3], teams_arr[4], 7, 0, 1)
+    #round2
+    print("\nSEMIFINALS:")
+    winner18_45 = playseries(winner18, winner45, 7, 0, 1)
+    winner27_36 = playseries(winner27, winner36, 7, 0, 1)
+    #finals
+    print("\nNBA FINALS:")
+    finals_winner = playseries(winner18_45, winner27_36, 7, 0, 1)
+    return finals_winner
+    
 def playseason(teams_arr):
     itr = 0
     while itr < len(teams_arr):
@@ -368,12 +384,13 @@ def playseason(teams_arr):
         t.print_pergame_box()
         print("\n")
         
-def playseries(team1, team2, numgames, prbox, prend):
+def playseries(team1, team2, numgames, prbox, prend): #returns winner
     wins1 = 0
     wins2 = 0
     series_games = numgames
+    winner_decided = False
     toggle_home = True #have toggle to change arenas every game (maybe home adv l8r implement so this might matter)
-    while numgames > 0:
+    while numgames > 0 and winner_decided==False:
         if toggle_home == True:
             toggle_home = False
             winner = playgame(team1, team2, 0, prbox)
@@ -389,6 +406,8 @@ def playseries(team1, team2, numgames, prbox, prend):
             elif winner==team1: 
                 wins1 += 1
         numgames -= 1
+        if wins1>(series_games/2) or wins2>(series_games/2):
+            winner_decided = True
     
     print("\n")
     print("Result of",series_games,"game series:",team1.name,"-",wins1,team2.name,"-",wins2,"\n")
@@ -398,6 +417,10 @@ def playseries(team1, team2, numgames, prbox, prend):
         print("\n")
         print(team2.name,"-",wins2,"wins")
         team2.print_pergame_box()
+    
+    if wins1 > wins2:
+        return team1
+    else: return team2
 
 def playgame(home, away, prplay, prbox): #home team, away team, print play-by-play (0 or 1), print box at end (0 or 1)
     if prbox==1: 

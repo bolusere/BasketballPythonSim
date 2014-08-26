@@ -29,7 +29,7 @@ if __name__ == "__main__":
             print("pick a positive integer idiot")
 
     draft_list = draft_generate(draft_size)
-    player_team, opponents_teams = draft_start(draft_list, 9)
+    player_team, opponents_teams = draft_start(draft_list, 9, 5)
     #TEAM MANAGEMENT:
     name = input("Input team name: ")
     player_team.name = name
@@ -50,6 +50,21 @@ if __name__ == "__main__":
     league.append(player_team)
     playseason(league)
     
+    teamwins = []
+    for team in league:
+        teamwins.append(team.wins)
+    teamwins.sort()
+    backup_league = league
+    playoff_teams = []
+    while len(playoff_teams) < 8:
+        for team in league:
+            if len(teamwins) > 0:
+                if team.wins == teamwins[len(teamwins) - 1]: #most wins
+                    playoff_teams.append(team)
+                    teamwins.remove(team.wins)
+    
+    finals_winner = playoffs(playoff_teams)
+    print("\n",finals_winner.name,"HAS WON THE NBA FINALS!!")
     """
     print("\n*** Average Joes' attributes: ***")
     StanPoint = generate_player(1, 0)
