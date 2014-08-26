@@ -363,7 +363,7 @@ def playoffs(teams_arr):
     winner27_36 = playseries(winner27, winner36, 7, 0, 1)
     #finals
     print("\nNBA FINALS:")
-    finals_winner = playseries(winner18_45, winner27_36, 7, 0, 1)
+    finals_winner = playseries(winner18_45, winner27_36, 7, 1, 1)
     return finals_winner
     
 def playseason(teams_arr):

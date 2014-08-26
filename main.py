@@ -64,7 +64,7 @@ if __name__ == "__main__":
                     teamwins.remove(team.wins)
     
     finals_winner = playoffs(playoff_teams)
-    print("\n",finals_winner.name,"HAS WON THE NBA FINALS!!")
+    print("\n",finals_winner.name,"HAVE WON THE NBA FINALS!!")
     """
     print("\n*** Average Joes' attributes: ***")
     StanPoint = generate_player(1, 0)
