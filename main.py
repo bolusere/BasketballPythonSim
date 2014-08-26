@@ -20,7 +20,7 @@ if __name__ == "__main__":
     """
     while True:
         try:
-            draft_size = int(input("draft size??: "))
+            draft_size = int(input("draft size?? (pick 50 since its doing 10 team league): "))
             if draft_size <= 0:
                 print("pick a positive integer idiot")
             else:
@@ -29,9 +29,16 @@ if __name__ == "__main__":
             print("pick a positive integer idiot")
 
     draft_list = draft_generate(draft_size)
-    player_team, opponents_list = draft_start(draft_list, 1)
+    player_team, opponents_teams = draft_start(draft_list, 9)
     player_team.random_assignment()
 
+    #play season fool
+    league = []
+    for ai in opponents_teams:
+        league.append(ai)
+    league.append(player_team)
+    playseason(league)
+    
     """
     print("\n*** Average Joes' attributes: ***")
     StanPoint = generate_player(1, 0)
@@ -51,17 +58,17 @@ if __name__ == "__main__":
     team_A = team("Average Joes", StanPoint, StanShoot, StanSmall, StanPower, StanCenter)
     team_B = team("The Not Bads", StanPoin2, StanShoo2, StanSmal2, StanPowe2, StanCente2)
     """
-    team_A = player_team
-    team_B = opponents_list[0].ai_team
-    playseries(team_A, team_B, 7, 0, 1)
-    print("\n")
+    #team_A = player_team
+    #team_B = opponents_list[0].ai_team
+    #playseries(team_A, team_B, 7, 0, 1)
+    #print("\n")
     #team_A.print_team_ratings()
     #print("\n")
     #team_B.print_team_ratings()
-    print("\nJoes Mismatches:")
-    detect_mismatch(team_A, team_B, 1)
-    print("\nBads Mismatches:")
-    detect_mismatch(team_B, team_A, 1)
+    #print("\nJoes Mismatches:")
+    #detect_mismatch(team_A, team_B, 1)
+    #print("\nBads Mismatches:")
+    #detect_mismatch(team_B, team_A, 1)
 
     """
     #gonna play season fool

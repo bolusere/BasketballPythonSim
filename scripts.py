@@ -77,8 +77,12 @@ def draft_start(player_list, num_opponents):
         elif draft_pick == num_opponents + 2:
             draft_pick = num_opponents + 1
         input("Press Enter to continue...")
+        
+    opp_teams = []
+    for ai in opponents_list:
+        opp_teams.append(ai.get_team())
 
-    return player_team, opponents_list
+    return player_team, opp_teams
 
 def find_rebounder(team): #who shall receive the rebounding blessing?
     cenreb = random.random()*team.center.rebounding*1.2
@@ -345,14 +349,14 @@ def playseason(teams_arr):
         while ttr < len(teams_arr):
             playgame(teams_arr[itr], teams_arr[ttr], 0, 0).wins += 1
             playgame(teams_arr[ttr], teams_arr[itr], 0, 0).wins += 1
+            playgame(teams_arr[itr], teams_arr[ttr], 0, 0).wins += 1
+            playgame(teams_arr[ttr], teams_arr[itr], 0, 0).wins += 1
             ttr += 1
-            #print("ttr:", ttr)
         itr += 1
-        #print("itr:", itr)
     
     print("\n")
     for t in teams_arr:
-        print(t.name ,"-", t.wins, "wins out of", t.pointg.stats_gms, "games")
+        print(t.name ,":", t.wins, "-", (t.pointg.stats_gms - t.wins))
         t.print_pergame_box()
         print("\n")
         

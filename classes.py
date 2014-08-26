@@ -15,16 +15,19 @@ class ai_opponent:
             self.ai_team = ai_team
 
     def select_player(self, player_list):
+        overalls = []
+        for p in player_list:
+            overalls.append(p.overall)
+        overalls.sort()
         draft_position = 0
-        for x in player_list:
-            if random.random() > 0.8:
-                print(self.name, "has selected", x.name)
+        for p in player_list:
+            if p.overall == overalls[len(player_list)-1]:
+                print(self.name, "has selected", p.name)
                 return draft_position
             draft_position += 1
-        random_selection = math.floor(random.random() * len(player_list))
-        print(self.name, "has selected", player_list[random_selection].name)
-        return random_selection
-        #needs some sort of rating system
+        
+    def get_team(self):
+        return self.ai_team
 
 class bbplayer:
     #stats_array = [[0 for x in range(2)] 0 for x in range(9)]
