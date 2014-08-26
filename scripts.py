@@ -36,6 +36,16 @@ def draft_generate(num_players):
         player_list.append(generate_player(position, 0, name))
     return player_list
 
+def draft_print(player_list):
+    print("NAME:        | HT|WGT|AG|SP|IN|MD|OT|PS|HD|ST|BL|ID|OD|RB|")
+    count = 0
+    for x in player_list:
+        count+=1
+        x.print_ratings(0)
+        if count == 10:
+            print("NAME:        | HT|WGT|AG|SP|IN|MD|OT|PS|HD|ST|BL|ID|OD|RB|")
+            count = 0
+
 def draft_start(player_list, num_opponents):
     opponents_list = []
     for i in range(num_opponents):
@@ -43,19 +53,15 @@ def draft_start(player_list, num_opponents):
     player_team = team.empty()
     draft_pick = 1
     direction = 1
+    draft_print(player_list)
     for i in range(5):
-        count = 0
-        print("NAME:        | HT|WGT|AG|SP|IN|MD|OT|PS|HD|ST|BL|ID|OD|RB|")
-        for x in player_list:
-            count+=1
-            x.print_ratings(0)
-            if count == 10:
-                print("NAME:        | HT|WGT|AG|SP|IN|MD|OT|PS|HD|ST|BL|ID|OD|RB|")
-                count = 0
+        draft_print(player_list)
         for k in range(num_opponents + 1):
             if draft_pick == 1:
                 #get player selection
                 successful_selection = False
+                if k != 0:
+                    draft_print(player_list)
                 while True:
                     player_selection_name = input("who u want: ")
                     for player in player_list:
@@ -71,6 +77,8 @@ def draft_start(player_list, num_opponents):
                 opponents_choice = opponents_list[draft_pick - 2].select_player(player_list)
                 opponents_list[draft_pick - 2].ai_team.add_player(player_list.pop(opponents_choice), i+1)
                 draft_pick += direction
+            if draft_pick == 1 and direction == -1:
+                input("Press Enter to continue to your pick...")
         direction = -direction
         if draft_pick == 0:
             draft_pick = 1

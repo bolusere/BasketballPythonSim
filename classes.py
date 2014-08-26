@@ -193,6 +193,22 @@ class team:
         for player in self.player_array:
             player.game_reset_pstats()
 
+    def print_team(self):
+        print(self.name)
+        count = 1
+        for player in self.player_array:
+            print(count, end=" ")
+            if player is not None:
+                print(player.name)
+            else: print("None")
+            count += 1
+        for player in self.bench_array:
+            print(count, end=" ")
+            if player is not None:
+                print(player.name)
+            else: print("None")
+            count += 1
+
     def print_team_ratings(self):
         print(self.name)
         print("NAME:        | HT|WGT|AG|SP|IN|MD|OT|PS|HD|ST|BL|ID|OD|RB|")
@@ -239,3 +255,21 @@ class team:
                 if player is None:
                     self.player_array[self.player_array.index(player)] = self.bench_array.pop()
         self.name = "PLAYER TEAM"
+
+    def swap_players(self, pos_1, pos_2):
+        if pos_1 <= 10 and pos_2 <= 10 and pos_1 != pos_2:
+            player_list = []
+            for player in self.player_array:
+                player_list.append(player)
+            if len(self.bench_array) != 0:
+                for player in self.bench_array:
+                    player_list.append(player)
+            player_1 = player_list[pos_1 - 1]
+            player_list[pos_1 - 1] = player_list[pos_2 - 1]
+            player_list[pos_2 - 1] = player_1
+            for i in range(5):
+                self.player_array[i] = player_list[i]
+            for i in range(5, len(player_list)):
+                self.bench_array[i - 5] = player_list[i]
+        else:
+            raise KeyError("ur dumb")
