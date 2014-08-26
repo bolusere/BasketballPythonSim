@@ -196,16 +196,17 @@ class team:
     def print_team(self):
         print(self.name)
         count = 1
+        print("NAME:          | HT|WGT|AG|SP|IN|MD|OT|PS|HD|ST|BL|ID|OD|RB|")
         for player in self.player_array:
             print(count, end=" ")
             if player is not None:
-                print(player.name)
+                player.print_ratings(0)
             else: print("None")
             count += 1
         for player in self.bench_array:
             print(count, end=" ")
             if player is not None:
-                print(player.name)
+                player.print_ratings(0)
             else: print("None")
             count += 1
 

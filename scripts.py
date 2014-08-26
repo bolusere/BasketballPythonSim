@@ -53,7 +53,6 @@ def draft_start(player_list, num_opponents):
     player_team = team.empty()
     draft_pick = 1
     direction = 1
-    draft_print(player_list)
     for i in range(5):
         draft_print(player_list)
         for k in range(num_opponents + 1):

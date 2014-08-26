@@ -31,15 +31,15 @@ if __name__ == "__main__":
     draft_list = draft_generate(draft_size)
     player_team, opponents_teams = draft_start(draft_list, 9)
     #TEAM MANAGEMENT:
-    name = input("Team Name??")
+    name = input("Input team name: ")
     player_team.name = name
     while True:
         player_team.print_team()
-        input = input("Make your selection: ")
-        if input == "b":
+        glhf = input("Make your selection: ")
+        if glhf == "b":
             break
-        input = input.replace(" ", "")
-        partitioned_tuple = input.partition(",")
+        glhf = glhf.replace(" ", "")
+        partitioned_tuple = glhf.partition(",")
 
         player_team.swap_players(int(partitioned_tuple[0]), int(partitioned_tuple[2]))
 
