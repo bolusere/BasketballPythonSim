@@ -20,12 +20,40 @@ class ai_opponent:
             overalls.append(p.overall)
         overalls.sort()
         draft_position = 0
-        for p in player_list:
-            if p.overall == overalls[len(player_list)-1]:
-                print(self.name, "has selected", p.name)
-                return draft_position
-            draft_position += 1
-        
+        made_selection = False
+        top = 1
+        while made_selection==False:
+            for p in player_list:
+                if p.overall == overalls[len(player_list)-top]:
+                    if self.ai_team.player_array[p.pref_pos-1] == None:
+                        print(self.name, "has selected", p.name, p.pref_pos)
+                        made_selection = True
+                        return draft_position
+                    else: #don't pick top guy since we already have a guy in that position 
+                        if top == len(player_list): #no guys in the position we want
+                            sec_draft_position = 0
+                            for p in player_list:
+                                if p.overall == overalls[len(player_list)-1]: #just pick best overall guy
+                                    if self.ai_team.player_array[0] == None:
+                                        p.pref_pos = 1
+                                    elif self.ai_team.player_array[1] == None:
+                                        p.pref_pos = 2
+                                    elif self.ai_team.player_array[2] == None:
+                                        p.pref_pos = 3
+                                    elif self.ai_team.player_array[3] == None:
+                                        p.pref_pos = 4
+                                    elif self.ai_team.player_array[4] == None:
+                                        p.pref_pos = 5
+                                    
+                                    print(self.name, "has selected", p.name, p.pref_pos)
+                                    made_selection = True
+                                    return sec_draft_position
+                                    
+                                sec_draft_position += 1
+                        top += 1
+                draft_position += 1
+            draft_position = 0
+
     def get_team(self):
         return self.ai_team
 
@@ -54,9 +82,10 @@ class bbplayer:
     stats_tot_blk = 0
     stats_tot_msm = 0
     
-    def __init__(self, name, height, weight, speed, age, int_s, mid_s, out_s, passing, handling, steal, block, int_d, out_d, rebounding):
+    def __init__(self, name, pref_pos, height, weight, speed, age, int_s, mid_s, out_s, passing, handling, steal, block, int_d, out_d, rebounding):
         self.name       = name
         self.height     = height
+        self.pref_pos   = pref_pos
         self.weight     = weight
         self.speed      = speed
         self.age        = age
@@ -129,11 +158,11 @@ class bbplayer:
     def print_ratings(self, labels): #labels = 1 if they want headings, 0 if jsut raw stats
         if labels==1:
             print("NAME:        | HT|WGT|AG|SP|IN|MD|OT|PS|HD|ST|BL|ID|OD|RB|")
-        print("{name:<13}|".format(name=self.name), self.height, self.weight, self.age, self.speed, self.int_s, self.mid_s, self.out_s, self.passing, self.handling, self.steal, self.block, self.int_d, self.out_d, self.rebounding, self.overall)
+        print("{name:<13}|".format(name=self.name), self.height, self.weight, self.age, self.speed, self.int_s, self.mid_s, self.out_s, self.passing, self.handling, self.steal, self.block, self.int_d, self.out_d, self.rebounding, self.overall, self.pref_pos)
     
     def print_pergame_boxplayer(self):
-        print("{name:<13}| {ppg:<4} | {fgp:<4} | {fp3:<4} | {reb:<4} | {ass:<4} | {stl:<4}| {blk:<4}|  {fga:<2} |  {ga3:<2} | {msm:<3}".format(name=self.name, ppg=int(self.ppg*10)/10, fgp=int(self.fgp*1000)/10, fp3=int(self.fp3*999)/10,
-              reb=int(self.rpg*10)/10, ass=int(self.apg*10)/10, stl=int(self.spg*10)/10, blk=int(self.bpg*10)/10, fga=int(self.stats_tot_fga/self.stats_gms), ga3=int(self.stats_tot_3ga/self.stats_gms), msm=int(self.stats_tot_msm/self.stats_gms)))
+        print("{name:<13}| {ppg:<4} | {fgp:<4} | {fp3:<4} | {reb:<4} | {ass:<4} | {stl:<4}| {blk:<4}|  {fga:<2} |  {ga3:<2} | {msm:<3} {pos}".format(name=self.name, ppg=int(self.ppg*10)/10, fgp=int(self.fgp*1000)/10, fp3=int(self.fp3*999)/10,
+              reb=int(self.rpg*10)/10, ass=int(self.apg*10)/10, stl=int(self.spg*10)/10, blk=int(self.bpg*10)/10, fga=int(self.stats_tot_fga/self.stats_gms), ga3=int(self.stats_tot_3ga/self.stats_gms), msm=int(self.stats_tot_msm/self.stats_gms), pos=self.pref_pos))
 
     def print_boxplayer(self):
         print("{name:<13}|  {points:<3} | {fgm:<2}/ {fga:<2} | {gm3:<2}/ {ga3:<2} |  {rebounds:<3} |  {assists:<3} |  {steals:<3} |  {blocks:<3}".format(name=self.name, points=self.stats_pts, fgm=self.stats_fgm, 

@@ -74,7 +74,8 @@ def draft_start(player_list, num_opponents):
                     else: print("pick a real name idiot")
             elif draft_pick > 1 and draft_pick <= num_opponents + 1:
                 opponents_choice = opponents_list[draft_pick - 2].select_player(player_list)
-                opponents_list[draft_pick - 2].ai_team.add_player(player_list.pop(opponents_choice), i+1)
+                chosen_player = player_list.pop(opponents_choice)
+                opponents_list[draft_pick - 2].ai_team.add_player(chosen_player, chosen_player.pref_pos)
                 draft_pick += direction
             if draft_pick == 1 and direction == -1:
                 input("Press Enter to continue to your pick...")
@@ -313,7 +314,7 @@ def generate_player(pref_pos, pr, name="Generic"):
             out_s += random.randint(8, 12)
             out_d += random.randint(8, 12)
             
-    return bbplayer(name, height, weight, speed, age, int_s, mid_s, out_s, passing, handling, steal, block, int_d, out_d, rebounding)
+    return bbplayer(name, pref_pos, height, weight, speed, age, int_s, mid_s, out_s, passing, handling, steal, block, int_d, out_d, rebounding)
 
 def generate_team(name, pr):
     gen_team = team(name, generate_player(1, 0), generate_player(2, 0), generate_player(3, 0), generate_player(4, 0), generate_player(5, 0))
