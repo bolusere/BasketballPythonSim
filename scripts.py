@@ -250,7 +250,7 @@ def generate_player(pref_pos, pr, name="Generic"):
     for a in gained_attributes:
         if pr==1: print(a)
         if a=="Passer":
-            passing += random.randint(10, 15)
+            passing += random.randint(15, 20)
         elif a=="Offensive Weapon":
             out_s += random.randint(0, 10)
             mid_s += random.randint(10, 15)
@@ -268,8 +268,8 @@ def generate_player(pref_pos, pr, name="Generic"):
             rebounding += random.randint(10, 15)
             height += random.randint(0, 2)
         elif a=="Fumbler":
-            passing -= random.randint(10, 15)
-            handling -= random.randint(10, 15)
+            passing -= random.randint(5, 10)
+            handling -= random.randint(5, 10)
         elif a=="Fatty":
             weight += random.randint(50, 100)
         elif a=="Slow":
@@ -363,7 +363,7 @@ def playoffs(teams_arr):
     winner27_36 = playseries(winner27, winner36, 7, 0, 1)
     #finals
     print("\nNBA FINALS:")
-    finals_winner = playseries(winner18_45, winner27_36, 7, 1, 1)
+    finals_winner = playseries(winner18_45, winner27_36, 7, 0, 1)
     return finals_winner
     
 def playseason(teams_arr):
@@ -385,6 +385,8 @@ def playseason(teams_arr):
         print("\n")
         
 def playseries(team1, team2, numgames, prbox, prend): #returns winner
+    team1.set_stats_zero()
+    team2.set_stats_zero() #reset all the player stats so the pergame box is only for this series
     wins1 = 0
     wins2 = 0
     series_games = numgames
@@ -537,7 +539,7 @@ def run_play(offense, defense, matches, prplay): #take it possession at time yo
                 #rebounding, defenders have 3:1 advantage
                 #weighted rebounding advantage calculator, maybe add height adv too l8r
                 reb_adv = (defense.center.rebounding - offense.center.rebounding) + (defense.powerf.rebounding - offense.powerf.rebounding)*0.85 + (defense.smallf.rebounding - offense.smallf.rebounding)*0.7 + (defense.shootg.rebounding - offense.shootg.rebounding)*0.5 + (defense.pointg.rebounding - offense.pointg.rebounding)*0.25
-                reb_adv *= 0.5
+                reb_adv *= 0.3
                 if (random.random()*100 + reb_adv) > 25: #defensive reb
                     rebounder = find_rebounder(defense)
                     if prplay==1: print(rebounder.name,"grabs the defensive rebound!")

@@ -125,7 +125,21 @@ class bbplayer:
         for x in stats_array:
             x[1] += x[0]
             x[0] = 0
-    ''' 
+    '''
+
+    def set_stats_zero(self):
+        self.stats_gms = 0
+        self.stats_tot_pts = 0
+        self.stats_tot_fga = 0
+        self.stats_tot_fgm = 0
+        self.stats_tot_3ga = 0
+        self.stats_tot_3gm = 0
+        self.stats_tot_ass = 0
+        self.stats_tot_reb = 0
+        self.stats_tot_stl = 0
+        self.stats_tot_blk = 0
+        self.stats_tot_msm = 0
+    
     @property
     def overall(self):
         return int(self.speed + self.int_s**1.3 + self.mid_s**1.3 + self.out_s**1.3 + self.passing + self.handling + self.steal**1.1 + self.block**1.1 + self.int_d**1.2 + self.out_d**1.2 + self.rebounding**1.2)
@@ -158,7 +172,44 @@ class bbplayer:
     def print_ratings(self, labels): #labels = 1 if they want headings, 0 if jsut raw stats
         if labels==1:
             print("NAME:        | HT|WGT|AG|SP|IN|MD|OT|PS|HD|ST|BL|ID|OD|RB|")
-        print("{name:<13}|".format(name=self.name), self.height, self.weight, self.age, self.speed, self.int_s, self.mid_s, self.out_s, self.passing, self.handling, self.steal, self.block, self.int_d, self.out_d, self.rebounding, self.overall, self.pref_pos)
+        
+        if self.height>99: disp_height = 99
+        else: disp_height = self.height
+        
+        if self.speed>99: disp_speed = 99
+        else: disp_speed = self.speed
+        
+        if self.int_s>99: disp_int_s = 99
+        else: disp_int_s = self.int_s
+        
+        if self.mid_s>99: disp_mid_s = 99
+        else: disp_mid_s = self.mid_s
+        
+        if self.out_s>99: disp_out_s = 99
+        else: disp_out_s = self.out_s
+        
+        if self.passing>99: disp_passing = 99
+        else: disp_passing = self.passing
+        
+        if self.handling>99: disp_handling = 99
+        else: disp_handling = self.handling
+        
+        if self.steal>99: disp_steal = 99
+        else: disp_steal = self.steal
+        
+        if self.block>99: disp_block = 99
+        else: disp_block = self.block
+        
+        if self.int_d>99: disp_int_d = 99
+        else: disp_int_d = self.int_d
+        
+        if self.out_d>99: disp_out_d = 99
+        else: disp_out_d = self.out_d
+        
+        if self.rebounding>99: disp_rebounding = 99
+        else: disp_rebounding = self.rebounding
+        
+        print("{name:<13}|".format(name=self.name), disp_height, self.weight, self.age, disp_speed, disp_int_s, disp_mid_s, disp_out_s, disp_passing, disp_handling, disp_steal, disp_block, disp_int_d, disp_out_d, disp_rebounding, self.overall, self.pref_pos)
     
     def print_pergame_boxplayer(self):
         print("{name:<13}| {ppg:<4} | {fgp:<4} | {fp3:<4} | {reb:<4} | {ass:<4} | {stl:<4}| {blk:<4}|  {fga:<2} |  {ga3:<2} | {msm:<3} {pos}".format(name=self.name, ppg=int(self.ppg*10)/10, fgp=int(self.fgp*1000)/10, fp3=int(self.fp3*999)/10,
@@ -221,6 +272,10 @@ class team:
     def game_reset_tstats(self):
         for player in self.player_array:
             player.game_reset_pstats()
+
+    def set_stats_zero(self):
+        for player in self.player_array:
+            player.set_stats_zero()
 
     def print_team(self):
         print(self.name)
