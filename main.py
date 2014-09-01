@@ -20,16 +20,26 @@ if __name__ == "__main__":
     """
     while True:
         try:
-            draft_size = int(input("draft size?? (pick 50 since its doing 10 team league): "))
-            if draft_size <= 0:
+            league_size = int(input("Enter total number of teams in league: "))
+            if league_size <= 0:
                 print("pick a positive integer idiot")
             else:
                 break
         except ValueError:
             print("pick a positive integer idiot")
-
-    draft_list = draft_generate(draft_size)
-    player_team, opponents_teams = draft_start(draft_list, 9, 5)
+            
+    while True:
+        try:
+            draft_pos = int(input("What pick do you want in the draft? (1-{max}) ".format(max=league_size)))
+            if draft_pos < 1 or draft_pos > league_size:
+                print("Has to be between 1 and the total number of teams in league.")
+            else:
+                break
+        except ValueError:
+            print("Has to be between 1 and the total number of teams in league.")
+            
+    draft_list = draft_generate(league_size * 5 + 10)
+    player_team, opponents_teams = draft_start(draft_list, league_size - 1, draft_pos)
     #TEAM MANAGEMENT:
     name = input("Input team name: ")
     player_team.name = name
@@ -49,6 +59,8 @@ if __name__ == "__main__":
         league.append(ai)
     league.append(player_team)
     playseason(league)
+    
+    input("\nPress Enter to continue to the playoffs...")
     
     teamwins = []
     for team in league:

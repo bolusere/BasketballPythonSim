@@ -52,15 +52,18 @@ def draft_start(player_list, num_opponents, player_pick_num):
         opponents_list.append(ai_opponent())
     player_team = team.empty()
     draft_pick = 1
+    draft_turn = 1
     direction = 1
     for i in range(5):
-        draft_print(player_list)
+        #draft_print(player_list)
+        print("\nNEXT ROUND\n")
         for k in range(num_opponents + 1):
-            if draft_pick == 1:
+            if draft_pick == player_pick_num:
+                draft_print(player_list)
                 #get player selection
                 successful_selection = False
-                if k != 0:
-                    draft_print(player_list)
+                #if k != 0:
+                #    draft_print(player_list)
                 while True:
                     player_selection_name = input("who u want: ")
                     for player in player_list:
@@ -72,24 +75,26 @@ def draft_start(player_list, num_opponents, player_pick_num):
                             break
                     if successful_selection: break
                     else: print("pick a real name idiot")
-            elif draft_pick > 1 and draft_pick <= num_opponents + 1:
-                opponents_choice = opponents_list[draft_pick - 2].select_player(player_list)
+            elif draft_pick >= 1 and draft_pick <= num_opponents + 1: #draft_pick > 1 and
+                opponents_choice = opponents_list[draft_turn - 1].select_player(player_list)
                 chosen_player = player_list.pop(opponents_choice)
-                opponents_list[draft_pick - 2].ai_team.add_player(chosen_player, chosen_player.pref_pos)
+                opponents_list[draft_turn - 1].ai_team.add_player(chosen_player, chosen_player.pref_pos)
                 draft_pick += direction
-            if draft_pick == 1 and direction == -1:
-                input("Press Enter to continue to your pick...")
+                draft_turn += direction
+            #if draft_pick == 1 and direction == -1:
+                #input("Press Enter to continue to your pick...")
         direction = -direction
         if draft_pick == 0:
             draft_pick = 1
+            draft_turn = 1
         elif draft_pick == num_opponents + 2:
             draft_pick = num_opponents + 1
-        input("Press Enter to continue...")
+            draft_turn = num_opponents
+        #input("Press Enter to continue...")
         
     opp_teams = []
     for ai in opponents_list:
         opp_teams.append(ai.get_team())
-
     return player_team, opp_teams
 
 def find_rebounder(team): #who shall receive the rebounding blessing?
@@ -148,20 +153,21 @@ def generate_name_set(size, first_names_list, last_names_list=None):
 #DEFENSE: steal-block-intd-outd-rebounding
 def generate_player(pref_pos, pr, name="Generic"):
     #default values
+    def_rat = 75
     height     = 78 #6'6"
     weight     = 180
-    speed      = 75
+    speed      = def_rat
     age        = 25
-    int_s      = 75
-    mid_s      = 75
-    out_s      = 75
-    passing    = 75
-    handling   = 75
-    steal      = 75
-    block      = 75
-    int_d      = 75
-    out_d      = 75
-    rebounding = 75
+    int_s      = def_rat
+    mid_s      = def_rat
+    out_s      = def_rat
+    passing    = def_rat
+    handling   = def_rat
+    steal      = def_rat
+    block      = def_rat
+    int_d      = def_rat
+    out_d      = def_rat
+    rebounding = def_rat
     if pref_pos==1: #point guard
         if pr==1: print("\nPOINT GUARD")
         height -= random.randint(3, 6)
@@ -323,6 +329,19 @@ def generate_team(name, pr):
         gen_team.print_team_ratings()
     return gen_team
     
+def get_ball_carrier(team):
+    smfbc = random.random()*team.smallf.passing
+    shgbc = random.random()*team.shootg.passing*1.1
+    ptgbc = random.random()*team.pointg.passing*1.2
+    listbc = [smfbc, shgbc, ptgbc]
+    listbc.sort()
+    if listbc[2]==smfbc:
+        return team.smallf
+    elif listbc[2]==shgbc:
+        return team.shootg
+    else:
+        return team.pointg
+
 def intelligent_pass(who_poss, offense, defense, matches):
     sorted_matches = sorted(matches)
     weighted = 2
@@ -362,9 +381,52 @@ def playoffs(teams_arr):
     winner18_45 = playseries(winner18, winner45, 7, 0, 1)
     winner27_36 = playseries(winner27, winner36, 7, 0, 1)
     #finals
+    input("\nPress Enter to continue to the NBA FINALS...")
     print("\nNBA FINALS:")
-    finals_winner = playseries(winner18_45, winner27_36, 7, 0, 1)
-    return finals_winner
+    #gonna play thh NBA finals with the play-by-play printing so make it more dramatic lol
+    winner18_45.set_stats_zero()
+    winner27_36.set_stats_zero() #reset all the player stats so the pergame box is only for this series
+    wins1 = 0
+    wins2 = 0
+    series_games = 7
+    numgames = 7
+    winner_decided = False
+    toggle_home = True #have toggle to change arenas every game (maybe home adv l8r implement so this might matter)
+    while numgames > 0 and winner_decided==False:
+        print("\nStandings: ",winner18_45.name,"-",wins1,winner27_36.name,"-",wins2)
+        input("\nPress enter to play Game {gm} of the NBA Finals...".format(gm=series_games - numgames + 1))
+        if toggle_home == True:
+            toggle_home = False
+            winner = playgame(winner18_45, winner27_36, 1, 1)
+            if winner==winner18_45:
+                wins1 += 1
+            elif winner==winner27_36: 
+                wins2 += 1
+        else:
+            toggle_home = True
+            winner = playgame(winner27_36, winner18_45, 1, 1)
+            if winner==winner27_36:
+                wins2 += 1
+            elif winner==winner18_45: 
+                wins1 += 1
+        numgames -= 1
+        if wins1>(series_games/2) or wins2>(series_games/2):
+            winner_decided = True
+            
+    print("\n")
+    print("NBA FINALS RESULTS:",winner18_45.name,"-",wins1,winner27_36.name,"-",wins2,"\n")
+    print(winner18_45.name,"-",wins1,"wins")
+    winner18_45.print_pergame_box()
+    print("\n")
+    print(winner27_36.name,"-",wins2,"wins")
+    winner27_36.print_pergame_box()
+    
+    if wins1 > wins2:
+        return winner18_45
+    else: return winner27_36
+    
+    #finals_winner = playseries(winner18_45, winner27_36, 7, 1, 1)
+    #return finals_winner
     
 def playseason(teams_arr):
     itr = 0
@@ -435,8 +497,8 @@ def playgame(home, away, prplay, prbox): #home team, away team, print play-by-pl
     max_gametime = 2400
     hscore = 0
     ascore = 0
-    hspeed = (home.pointg.speed + home.shootg.speed + home.smallf.speed) / 300
-    aspeed = (away.pointg.speed + away.shootg.speed + away.smallf.speed) / 300
+    hspeed = (home.pointg.speed + home.shootg.speed + home.smallf.speed) / 260
+    aspeed = (away.pointg.speed + away.shootg.speed + away.smallf.speed) / 260
     playing = True
     
     matches_h = detect_mismatch(home, away, 0)
@@ -497,12 +559,21 @@ def run_play(offense, defense, matches, prplay): #take it possession at time yo
     if prplay==1: print(offense.name, "have the ball.")
     passes = 0
     off_poss = 1
-    who_poss = offense.pointg
-    who_def  = defense.pointg
+    who_poss = get_ball_carrier(offense)
+    if who_poss == offense.pointg:
+        who_def  = defense.pointg
+    if who_poss == offense.shootg:
+        who_def  = defense.shootg
+    if who_poss == offense.smallf:
+        who_def  = defense.smallf
+    if who_poss == offense.powerf:
+        who_def  = defense.powerf
+    if who_poss == offense.center:
+        who_def  = defense.center
     assister = who_poss
     while off_poss == 1:
         #mismatch = calc_mismatch(who_poss, who_def, 0)
-        if ((random.randint(0,6) + passes < 5) or (passes==0 and random.random()<0.97)) or (who_poss.passing*3 - who_poss.out_s - who_poss.mid_s - who_poss.int_s > 80 and random.random() < 0.9):
+        if ((random.randint(0,6) + passes < 5) or (passes==0 and random.random()<0.97)): # or (who_poss.passing*3 - who_poss.out_s - who_poss.mid_s - who_poss.int_s > 80 and random.random() < 0.9)
             #pass
             passes+=1
             ifsteal = pot_steal(who_poss, who_def)
@@ -532,7 +603,7 @@ def run_play(offense, defense, matches, prplay): #take it possession at time yo
                     if prplay==1: print(who_poss.name, "made a", points, "pt shot")
                     return points
                 else:
-                    if assister.passing*random.random() + 50 > 75: assister.stats_ass += 1
+                    if assister.passing*random.random() + 50 > 65: assister.stats_ass += 1
                     if prplay==1: print(who_poss.name, "made a", points, "pt shot with an assist from", assister.name)
                     return points
             else:
