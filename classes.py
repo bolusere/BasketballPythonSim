@@ -142,7 +142,7 @@ class bbplayer:
     
     @property
     def overall(self):
-        return int(self.speed + self.int_s**1.3 + self.mid_s**1.3 + self.out_s**1.3 + self.passing + self.handling + self.steal**1.1 + self.block**1.1 + self.int_d**1.2 + self.out_d**1.2 + self.rebounding**1.2)
+        return int(self.speed + self.int_s**1.3 + self.mid_s**1.3 + self.out_s**1.3 + self.passing**1.1 + self.handling + self.steal**1.1 + self.block**1.1 + self.int_d**1.2 + self.out_d**1.2 + self.rebounding**1.2)
     @property
     def ppg(self):
         return self.stats_tot_pts/self.stats_gms

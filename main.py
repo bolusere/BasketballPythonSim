@@ -17,6 +17,59 @@ if __name__ == "__main__":
     StanSmal2 = bbplayer("Onlydf", 80, 200, 80, 25, 99, 99, 99, 99, 75, 85, 70, 75, 80, 75)
     StanPowe2 = bbplayer("Power2", 82, 220, 60, 25, 99, 99, 99, 99, 75, 60, 90, 85, 70, 85)
     StanCente2= bbplayer("Cente2", 84, 250, 40, 25, 99, 99, 99, 99, 50, 40, 90, 90, 50, 90)
+
+    max_overall = 0
+    min_overall = 2000
+    overall_1 = 0
+    overall_2 = 0
+    overall_3 = 0
+    overall_4 = 0
+    overall_5 = 0
+    gen_num = 2000
+    for i in range(gen_num):
+        ov = generate_player(1, 0).overall
+        overall_1 += ov
+        if ov > max_overall:
+            max_overall = ov
+        if ov < min_overall:
+            min_overall = ov
+    for i in range(gen_num):
+        ov = generate_player(2, 0).overall
+        overall_2 += ov
+        if ov > max_overall:
+            max_overall = ov
+        if ov < min_overall:
+            min_overall = ov
+    for i in range(gen_num):
+        ov = generate_player(3, 0).overall
+        overall_3 += ov
+        if ov > max_overall:
+            max_overall = ov
+        if ov < min_overall:
+            min_overall = ov
+    for i in range(gen_num):
+        ov = generate_player(4, 0).overall
+        overall_4 += ov
+        if ov > max_overall:
+            max_overall = ov
+        if ov < min_overall:
+            min_overall = ov
+    for i in range(gen_num):
+        ov = generate_player(5, 0).overall
+        overall_5 += ov
+        if ov > max_overall:
+            max_overall = ov
+        if ov < min_overall:
+            min_overall = ov
+    
+    print("  Point Guard Average:", overall_1/gen_num)
+    print("  Shoot Guard Average:", overall_2/gen_num)
+    print("Small Forward Average:", overall_3/gen_num)
+    print("Point Forward Average:", overall_4/gen_num)
+    print("       Center Average:", overall_5/gen_num)
+    print("          Max Overall:", max_overall)
+    print("          Min Overall:", min_overall)
+    
     """
     while True:
         try:
@@ -78,6 +131,8 @@ if __name__ == "__main__":
     finals_winner = playoffs(playoff_teams)
     print("\n",finals_winner.name,"HAVE WON THE NBA FINALS!!")
     """
+    
+    """
     print("\n*** Average Joes' attributes: ***")
     StanPoint = generate_player(1, 0)
     StanShoot = generate_player(2, 0)
@@ -108,7 +163,7 @@ if __name__ == "__main__":
     #print("\nBads Mismatches:")
     #detect_mismatch(team_B, team_A, 1)
 
-    """
+
     #gonna play season fool
     while True:
         try:

@@ -176,7 +176,7 @@ def generate_player(pref_pos, pr, name="Generic"):
         int_s -= random.randint(8, 16)
         mid_s += random.randint(0, 10) - 5
         out_s += random.randint(0, 10) - 5
-        passing += random.randint(0, 10)
+        passing += random.randint(5, 15)
         handling += random.randint(0, 10)
         steal += random.randint(0, 10) - 2
         block -= random.randint(20, 40)
@@ -191,7 +191,7 @@ def generate_player(pref_pos, pr, name="Generic"):
         int_s += random.randint(0, 16) - 8
         mid_s += random.randint(0, 13) - 5
         out_s += random.randint(0, 13) - 5
-        passing += random.randint(0, 10) - 3
+        passing += random.randint(0, 10)
         handling += random.randint(0, 10) - 2
         steal += random.randint(0, 10) - 5
         block -= random.randint(10, 30)
@@ -234,14 +234,14 @@ def generate_player(pref_pos, pr, name="Generic"):
         weight += random.randint(40, 80)
         speed += random.randint(0, 20) - 30
         int_s += random.randint(5, 15)
-        mid_s += random.randint(0, 20) - 20
+        mid_s += random.randint(0, 20) - 15
         out_s += random.randint(0, 30) - 45
         passing += random.randint(0, 20) - 40
         handling += random.randint(0, 30) - 40
         steal += random.randint(0, 30) - 40
         block += random.randint(5, 15)
         int_d += random.randint(5, 15)
-        out_d += random.randint(0, 20) - 30
+        out_d += random.randint(0, 20) - 20
         rebounding += random.randint(5, 15)
     #choose 5(?) of these "attributes" to make a player. Some are good, some bad, some funny
     list_attributes = ["Passer", "Offensive Weapon", "Blocker", "Tall", "Short", "On-ball Defense", "Rebounder", "Fumbler", "Fatty", "Slow", "No Threes", "Dunker", "Defensive Liability", "Offensive Liability",
@@ -280,9 +280,10 @@ def generate_player(pref_pos, pr, name="Generic"):
             weight += random.randint(50, 100)
         elif a=="Slow":
             speed -= random.randint(20, 40)
-            if speed<0: speed=0
+            if speed<10: speed=10
         elif a=="No Threes":
             out_s -= random.randint(20, 30)
+            if out_s<10: out_s=10
         elif a=="Dunker":
             int_s += random.randint(15, 20)
         elif a=="Defensive Liability":
@@ -294,6 +295,9 @@ def generate_player(pref_pos, pr, name="Generic"):
             int_s -= random.randint(5, 10)
             out_s -= random.randint(5, 10)
             mid_s -= random.randint(5, 10)
+            if mid_s<10: mid_s=10
+            if int_s<10: int_s=10
+            if out_s<10: out_s=10
         elif a=="Mid-range Specialist":
             mid_s += random.randint(12, 17)
         elif a=="The Whole Package":
@@ -313,6 +317,9 @@ def generate_player(pref_pos, pr, name="Generic"):
             mid_s -= random.randint(5, 15)
             int_s -= random.randint(5, 15)
             passing -= random.randint(5, 15)
+            if passing<10: passin=10
+            if mid_s<10: mid_s=10
+            if int_s<10: int_s=10
         elif a=="Two-way inside":
             int_s += random.randint(8, 12)
             int_d += random.randint(8, 12)
