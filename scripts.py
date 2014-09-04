@@ -348,6 +348,42 @@ def get_ball_carrier(team):
         return team.shootg
     else:
         return team.pointg
+        
+def get_season_awards(teams):
+    #MVP, Defensive Player, etc
+    mvp_score = 0
+    mvp = None
+    mvp_team = None
+    dpy_score = 0
+    dpy = None
+    dpy_team = None
+    nba_first_team = [None, None, None, None, None]
+    nba_first_team_from = [None, None, None, None, None]
+    nba_first_team_scores = [0, 0, 0, 0, 0]
+    for team in teams:
+        #all nba first team
+        for i in range(5):
+            team_calc = team.player_array[i].stats_tot_pts*2 + team.player_array[i].stats_tot_ass + team.player_array[i].stats_tot_reb*0.8 + team.player_array[i].stats_tot_stl*1.2 + team.player_array[i].stats_tot_blk*1.2 + team.wins*2
+            if team_calc > nba_first_team_scores[i]:
+                nba_first_team_scores[i] = team_calc
+                nba_first_team[i] = team.player_array[i]
+                nba_first_team_from[i] = team
+            
+        for p in team.player_array:
+            #MVP
+            mvp_calc = p.stats_tot_pts*2 + p.stats_tot_ass*1.2 + p.stats_tot_reb*0.8 + p.stats_tot_stl*1.2 + p.stats_tot_blk*1.2 + team.wins*30
+            if mvp_calc > mvp_score:
+                mvp_score = mvp_calc
+                mvp = p
+                mvp_team = team
+            #DPOTY
+            dpy_calc = p.stats_tot_reb*0.1 + p.stats_tot_stl + p.stats_tot_blk + team.wins*5
+            if dpy_calc > dpy_score:
+                dpy_score = dpy_calc
+                dpy = p
+                dpy_team = team
+                
+    return mvp, mvp_team, mvp_score, dpy, dpy_team, dpy_score, nba_first_team, nba_first_team_from, nba_first_team_scores
 
 def intelligent_pass(who_poss, offense, defense, matches):
     sorted_matches = sorted(matches)
@@ -504,8 +540,8 @@ def playgame(home, away, prplay, prbox): #home team, away team, print play-by-pl
     max_gametime = 2400
     hscore = 0
     ascore = 0
-    hspeed = (home.pointg.speed + home.shootg.speed + home.smallf.speed) / 260
-    aspeed = (away.pointg.speed + away.shootg.speed + away.smallf.speed) / 260
+    hspeed = (home.pointg.speed + home.shootg.speed + home.smallf.speed) / 600 + 0.5
+    aspeed = (away.pointg.speed + away.shootg.speed + away.smallf.speed) / 600 + 0.5
     playing = True
     
     matches_h = detect_mismatch(home, away, 0)
@@ -633,7 +669,7 @@ def take_shot(shooter, defender, defense, assister, prplay): #return points of s
     #give assist bonus for having a good passer pass to you
     ass_bonus = 0
     if assister != shooter:
-        ass_bonus = assister.passing / 20
+        ass_bonus = (assister.passing - 60) / 5
     
     #block?
     if random.random() * (defender.block + (defender.height - shooter.height)) > 80 or random.random() < 0.005:

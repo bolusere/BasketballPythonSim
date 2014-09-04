@@ -3,74 +3,7 @@ import random
 from scripts import *
 from classes import *
 if __name__ == "__main__":
-    """
-    # ------------------|  NAME  |HGT|WTLB|SPD|AGE|INS|MID|OUT|PSS|HND|STL|BLK|IND|OTD|REB| 
-    StanPoint = bbplayer("Pointy", 72, 150, 90, 25, 75, 75, 75, 99, 90, 80, 30, 30, 80, 20)
-    StanShoot = bbplayer("Shooty", 76, 180, 80, 25, 75, 85, 95, 75, 75, 50, 50, 50, 75, 40)
-    StanSmall = bbplayer("Smally", 80, 200, 80, 25, 80, 85, 80, 70, 75, 85, 70, 75, 80, 75)
-    StanPower = bbplayer("Powery", 82, 220, 60, 25, 80, 75, 30, 60, 75, 60, 90, 85, 70, 85)
-    StanCenter= bbplayer("iBeast", 84, 250, 40, 25, 95, 50, 20, 40, 50, 40, 90, 90, 50, 90)
 
-    # ------------------|  NAME  |HGT|WTLB|SPD|AGE|INS|MID|OUT|PSS|HND|STL|BLK|IND|OTD|REB|
-    StanPoin2 = bbplayer("iJesus", 72, 150, 90, 25, 99, 99, 99, 99, 90, 80, 30, 30, 80, 20)
-    StanShoo2 = bbplayer("3Shoot", 76, 180, 80, 25, 99, 99, 99, 99, 75, 50, 50, 50, 75, 40)
-    StanSmal2 = bbplayer("Onlydf", 80, 200, 80, 25, 99, 99, 99, 99, 75, 85, 70, 75, 80, 75)
-    StanPowe2 = bbplayer("Power2", 82, 220, 60, 25, 99, 99, 99, 99, 75, 60, 90, 85, 70, 85)
-    StanCente2= bbplayer("Cente2", 84, 250, 40, 25, 99, 99, 99, 99, 50, 40, 90, 90, 50, 90)
-
-    max_overall = 0
-    min_overall = 2000
-    overall_1 = 0
-    overall_2 = 0
-    overall_3 = 0
-    overall_4 = 0
-    overall_5 = 0
-    gen_num = 2000
-    for i in range(gen_num):
-        ov = generate_player(1, 0).overall
-        overall_1 += ov
-        if ov > max_overall:
-            max_overall = ov
-        if ov < min_overall:
-            min_overall = ov
-    for i in range(gen_num):
-        ov = generate_player(2, 0).overall
-        overall_2 += ov
-        if ov > max_overall:
-            max_overall = ov
-        if ov < min_overall:
-            min_overall = ov
-    for i in range(gen_num):
-        ov = generate_player(3, 0).overall
-        overall_3 += ov
-        if ov > max_overall:
-            max_overall = ov
-        if ov < min_overall:
-            min_overall = ov
-    for i in range(gen_num):
-        ov = generate_player(4, 0).overall
-        overall_4 += ov
-        if ov > max_overall:
-            max_overall = ov
-        if ov < min_overall:
-            min_overall = ov
-    for i in range(gen_num):
-        ov = generate_player(5, 0).overall
-        overall_5 += ov
-        if ov > max_overall:
-            max_overall = ov
-        if ov < min_overall:
-            min_overall = ov
-    
-    print("  Point Guard Average:", overall_1/gen_num)
-    print("  Shoot Guard Average:", overall_2/gen_num)
-    print("Small Forward Average:", overall_3/gen_num)
-    print("Point Forward Average:", overall_4/gen_num)
-    print("       Center Average:", overall_5/gen_num)
-    print("          Max Overall:", max_overall)
-    print("          Min Overall:", min_overall)
-    
-    """
     while True:
         try:
             league_size = int(input("Enter total number of teams in league: "))
@@ -113,6 +46,23 @@ if __name__ == "__main__":
     league.append(player_team)
     playseason(league)
     
+    mvp, mvp_team, mvp_score, dpy, dpy_team, dpy_score, nba_first_team, nba_first_team_from, nba_first_team_scores = get_season_awards(league)
+    print("\nEND OF SEASON AWARDS:\n")
+    print("MVP:",mvp.name,",",mvp_team.name,mvp_team.wins,"-",((len(league)-1) * 4) - mvp_team.wins,"Score:",mvp_score)
+    print("PER GAME AVG | PPG  | FG%  | 3G%  | RPG  | APG  | SPG | BPG | FGA | 3GA | MSM")
+    mvp.print_pergame_boxplayer()
+    
+    print("\nDPOTY:",dpy.name,",",dpy_team.name,dpy_team.wins,"-",((len(league)-1) * 4) - dpy_team.wins,"Score:",dpy_score)
+    print("PER GAME AVG | PPG  | FG%  | 3G%  | RPG  | APG  | SPG | BPG | FGA | 3GA | MSM")
+    dpy.print_pergame_boxplayer()
+    
+    print("\nALL NBA FIRST TEAM:")
+    for i in range(5):
+        print(i+1,":",nba_first_team[i].name,",",nba_first_team_from[i].name,nba_first_team_from[i].wins,"-",((len(league)-1) * 4) - nba_first_team_from[i].wins,"Score:",nba_first_team_scores[i])
+    print("PER GAME AVG | PPG  | FG%  | 3G%  | RPG  | APG  | SPG | BPG | FGA | 3GA | MSM")
+    for i in range(5):
+        nba_first_team[i].print_pergame_boxplayer()
+    
     input("\nPress Enter to continue to the playoffs...")
     
     teamwins = []
@@ -130,7 +80,7 @@ if __name__ == "__main__":
     
     finals_winner = playoffs(playoff_teams)
     print("\n",finals_winner.name,"HAVE WON THE NBA FINALS!!")
-    """
+
     
     """
     print("\n*** Average Joes' attributes: ***")
@@ -148,9 +98,26 @@ if __name__ == "__main__":
     StanCente2= generate_player(5, 0)
 
 
+    # ------------------|  NAME     |HGT|WTLB|SPD|AGE|INS|MID|OUT|PSS|HND|STL|BLK|IND|OTD|REB| 
+    StanPoint = bbplayer("Pointy", 1, 72, 150, 90, 25, 75, 75, 75, 99, 90, 80, 30, 30, 80, 20)
+    StanShoot = bbplayer("Shooty", 2, 76, 180, 80, 25, 75, 85, 95, 75, 75, 50, 50, 50, 75, 40)
+    StanSmall = bbplayer("Smally", 3, 80, 200, 80, 25, 80, 85, 80, 70, 75, 85, 70, 75, 80, 75)
+    StanPower = bbplayer("Powery", 4, 82, 220, 60, 25, 80, 75, 30, 60, 75, 60, 90, 85, 70, 85)
+    StanCenter= bbplayer("iBeast", 5, 84, 250, 40, 25, 95, 50, 20, 40, 50, 40, 90, 90, 50, 90)
+
+    # ------------------|  NAME     |HGT|WTLB|SPD|AGE|INS|MID|OUT|PSS|HND|STL|BLK|IND|OTD|REB|
+    StanPoin2 = bbplayer("iJesus", 1, 72, 150, 90, 25, 75, 75, 75, 75, 90, 80, 30, 30, 80, 20)
+    StanShoo2 = bbplayer("3Shoot", 2, 76, 180, 80, 25, 75, 85, 95, 75, 75, 50, 50, 50, 75, 40)
+    StanSmal2 = bbplayer("Onlydf", 3, 80, 200, 80, 25, 80, 85, 80, 70, 75, 85, 70, 75, 80, 75)
+    StanPowe2 = bbplayer("Power2", 4, 82, 220, 60, 25, 80, 75, 30, 60, 75, 60, 90, 85, 70, 85)
+    StanCente2= bbplayer("Cente2", 5, 84, 250, 40, 25, 95, 50, 20, 40, 50, 40, 90, 90, 50, 90)
+
     team_A = team("Average Joes", StanPoint, StanShoot, StanSmall, StanPower, StanCenter)
     team_B = team("The Not Bads", StanPoin2, StanShoo2, StanSmal2, StanPowe2, StanCente2)
-    """
+
+    playseries(team_A, team_B, 1000, 0, 1)
+    
+
     #team_A = player_team
     #team_B = opponents_list[0].ai_team
     #playseries(team_A, team_B, 7, 0, 1)
@@ -178,3 +145,4 @@ if __name__ == "__main__":
     league = generate_league(league_size)
     playseason(league)
     """
+

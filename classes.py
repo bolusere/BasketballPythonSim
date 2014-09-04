@@ -4,7 +4,7 @@ import random
 class ai_opponent:
     def __init__(self, name=None, ai_team=None):
         if name == None:
-            names_list = ["bad", "badd", "baddie", "hello"]
+            names_list = ["Sterling", "Cuban", "Rivers", "Riley", "Blatt", "Carlisle", "Gilbert", "Adolf", "Dolan", "Popovich"]
             self.name = random.choice(names_list)
             names_list.remove(self.name)
         else:
