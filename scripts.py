@@ -684,16 +684,16 @@ def take_shot(shooter, defender, defense, assister, prplay): #return points of s
     mid_ten = 0
     int_ten = 0
     if shooter.out_s>50: out_ten = (shooter.out_s / defender.out_d) * shooter.out_s**1.2
-    if shooter.out_s + 20 < shooter.mid_s or shooter.out_s + 20 < shooter.int_s: out_ten -= 200 #see if one stat is sig worse than other two so he never takes that shot
+    #if shooter.out_s + 20 < shooter.mid_s or shooter.out_s + 20 < shooter.int_s: out_ten -= 200 #see if one stat is sig worse than other two so he never takes that shot
     out_ten += 3*(shooter.out_s - 75)
     
     if shooter.mid_s>50: mid_ten = (shooter.mid_s / (defender.out_d*0.5 + 0.5*defender.int_d)) * shooter.mid_s**1.2
-    if shooter.mid_s + 20 < shooter.out_s or shooter.mid_s + 20 < shooter.int_s: mid_ten -= 200
+    #if shooter.mid_s + 20 < shooter.out_s or shooter.mid_s + 20 < shooter.int_s: mid_ten -= 200
     mid_ten += 3*(shooter.mid_s - 75)
     
     if shooter.int_s>50: int_ten = (shooter.int_s / defender.int_d) * shooter.int_s**1.2
-    if shooter.int_s + 20 < shooter.out_s or shooter.int_s + 20 < shooter.mid_s: int_ten -= 200
-    int_ten += 3*(shooter.mid_s - 75)
+    #if shooter.int_s + 20 < shooter.out_s or shooter.int_s + 20 < shooter.mid_s: int_ten -= 200
+    int_ten += 3*(shooter.int_s - 75)
     
     if out_ten<0: out_ten=0
     if mid_ten<0: mid_ten=0
@@ -702,7 +702,7 @@ def take_shot(shooter, defender, defense, assister, prplay): #return points of s
     sel_shot = random.randint(0, int(tot_ten))
     
     if sel_shot < out_ten and out_ten!=0: #3point shot selected
-        chance = 25 + (shooter.out_s)/3 + ass_bonus - (defender.out_d)/5 #70 norm multy
+        chance = 22 + (shooter.out_s)/3 + ass_bonus - (defender.out_d)/5 #70 norm multy
         if chance > random.random()*100: #chance > 60:
             #made it!
             shooter.stats_pts += 3
@@ -732,7 +732,7 @@ def take_shot(shooter, defender, defense, assister, prplay): #return points of s
             return 0
     
     else: #inside layup/dunk/etc
-        chance = 35 + (shooter.int_s)/3 + ass_bonus - (defender.int_d)/5
+        chance = 40 + (shooter.int_s)/3 + ass_bonus - (defender.int_d)/5
         if chance > random.random()*100:
             #made it!
             if random.random() < 0.3:
