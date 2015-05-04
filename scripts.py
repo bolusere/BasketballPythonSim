@@ -98,11 +98,11 @@ def draft_start(player_list, num_opponents, player_pick_num):
     return player_team, opp_teams
 
 def find_rebounder(team): #who shall receive the rebounding blessing?
-    cenreb = random.random()*team.center.rebounding*1.2
-    powreb = random.random()*team.powerf.rebounding*1.1
+    cenreb = random.random()*team.center.rebounding
+    powreb = random.random()*team.powerf.rebounding
     smfreb = random.random()*team.smallf.rebounding
-    shgreb = random.random()*team.shootg.rebounding*0.9
-    ptgreb = random.random()*team.pointg.rebounding*0.8
+    shgreb = random.random()*team.shootg.rebounding
+    ptgreb = random.random()*team.pointg.rebounding
     listreb = [cenreb, powreb, smfreb, shgreb, ptgreb]
     listreb.sort()
     if listreb[4]==cenreb:
@@ -387,7 +387,7 @@ def get_season_awards(teams):
 
 def intelligent_pass(who_poss, offense, defense, matches):
     sorted_matches = sorted(matches)
-    weighted = 2
+    weighted = 1.4
     tot_m = matches[0]**weighted + matches[1]**weighted + matches[2]**weighted + matches[3]**weighted + matches[4]**weighted
     sel_target = random.randint(0, int(tot_m))
     if sel_target < sorted_matches[4]**weighted:
@@ -702,8 +702,8 @@ def take_shot(shooter, defender, defense, assister, prplay): #return points of s
     sel_shot = random.randint(0, int(tot_ten))
     
     if sel_shot < out_ten and out_ten!=0: #3point shot selected
-        chance = (shooter.out_s / defender.out_d) * random.random() * 70 + ass_bonus + (shooter.out_s - 75)/3 #70 norm multy
-        if chance > 60:
+        chance = 25 + (shooter.out_s)/3 + ass_bonus - (defender.out_d)/5 #70 norm multy
+        if chance > random.random()*100: #chance > 60:
             #made it!
             shooter.stats_pts += 3
             shooter.stats_fga += 1
@@ -718,8 +718,9 @@ def take_shot(shooter, defender, defense, assister, prplay): #return points of s
             return 0
     
     elif sel_shot >= out_ten and sel_shot < int_ten and mid_ten!=0: #midrange jumper selected
-        chance = (shooter.mid_s / (defender.out_d*0.5 + 0.5*defender.int_d)) * random.random() * 80 + ass_bonus + (shooter.mid_s - 75)/3 #80 norm multy
-        if chance > 50:
+        def_mid_d = defender.out_d*0.5 + 0.5*defender.int_d
+        chance = 30 + (shooter.mid_s)/3 + ass_bonus - (def_mid_d)/5 #80 norm multy
+        if chance > random.random()*100:
             #made it!
             shooter.stats_pts += 2
             shooter.stats_fga += 1
@@ -731,8 +732,8 @@ def take_shot(shooter, defender, defense, assister, prplay): #return points of s
             return 0
     
     else: #inside layup/dunk/etc
-        chance = ((shooter.int_s / defender.int_d) * random.random() * 80) + ass_bonus + (shooter.int_s - 75)/3 # - random.random()*((defense.center.int_d + defense.powerf.int_d + defense.smallf.int_d*0.75)/5)
-        if chance > 50:
+        chance = 35 + (shooter.int_s)/3 + ass_bonus - (defender.int_d)/5
+        if chance > random.random()*100:
             #made it!
             if random.random() < 0.3:
                 if prplay==1: print(shooter.name, "slams it down over", defender.name, "!")
